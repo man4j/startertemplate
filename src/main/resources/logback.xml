@@ -1,0 +1,18 @@
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[%level] %d{dd.MM.yy HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <!-- 
+  <if condition='p("spring.profiles.active").equals("dev")'>
+    <then>
+      <logger name="com.n1global.acc" level="DEBUG" />          
+    </then>    
+  </if> -->
+  
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
