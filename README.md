@@ -1,0 +1,2 @@
+# startertemplate
+Starter archetype template
