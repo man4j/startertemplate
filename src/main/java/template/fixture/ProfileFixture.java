@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import starter.security.ProfileService;
 
 @Component
-@Profile("dev")
+@Profile({"dev", "test"})
 public class ProfileFixture {
     @Autowired
     private ProfileService myProfileService;

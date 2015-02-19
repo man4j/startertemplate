@@ -46,6 +46,13 @@ public class SignInController {
 
             return "/auth/signin";
         }
+        
+        if (!profile.isConfirmed()) {
+            result.rejectValue("email", "signin.notConfirmed", "Данный аккаунт не подтвержден по e-mail");
+            result.rejectValue("password", "emptymessage", "");
+
+            return "/auth/signin";
+        }
 
         securityService.auth(profile, request, response, form.isRememberMe());
 
