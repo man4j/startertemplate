@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -52,8 +51,7 @@ public class MainControllerTest extends ControllerIntegrationTestsSupport {
     @Test
     @WithMockUser
     public void shouldReturnMainView() throws Exception {
-        getMockMvc().perform(MockMvcRequestBuilders.get("/").with(SecurityMockMvcRequestPostProcessors.testSecurityContext()))
-                                                            .andExpect(MockMvcResultMatchers.view().name("/main"));
+        getMockMvc().perform(MockMvcRequestBuilders.get("/")).andExpect(MockMvcResultMatchers.view().name("/main"));
     }
 }
     

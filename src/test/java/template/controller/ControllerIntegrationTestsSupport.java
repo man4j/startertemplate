@@ -7,6 +7,7 @@ import template.config.CustomSocialConfig;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,7 +42,7 @@ public class ControllerIntegrationTestsSupport {
     @Before
     public void initMockMvc() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                                 .addFilters(springSecurityFilterChain)
+                                 .apply(SecurityMockMvcConfigurers.springSecurity())
                                  .build();
     }
     

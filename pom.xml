@@ -9,6 +9,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    
+    <version.spring>4.1.6.RELEASE</version.spring>
+    <version.junit>4.12</version.junit>
+    <version.security>4.0.0.M2</version.security>
   </properties>
   
   <dependencies>
@@ -21,21 +25,21 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>4.1.2.RELEASE</version>
+      <version>${version.spring}</version>
       <scope>test</scope>
     </dependency>
     
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>${version.junit}</version>
       <scope>test</scope>
     </dependency>
     
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
-      <version>4.0.0.M2</version>
+      <version>${version.security}</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
