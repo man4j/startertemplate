@@ -10,9 +10,9 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     
-    <version.spring>4.1.6.RELEASE</version.spring>
+    <version.spring>4.2.0.RC1</version.spring>
     <version.junit>4.12</version.junit>
-    <version.security>4.0.0.M2</version.security>
+    <version.security>4.0.1.RELEASE</version.security>
   </properties>
   
   <dependencies>
