@@ -11,16 +11,14 @@ import starter.config.MvcConfig;
 
 @ComponentScan({"template.profile", "template.controller", "template.service", "template.fixture"})
 public class CustomMvcConfig extends MvcConfig {
-    //Uncomment this for email sending
-    /**
     @Bean
     public JavaMailSender javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         
         javaMailSender.setHost("smtp.gmail.com");
         javaMailSender.setPort(587);
-        javaMailSender.setUsername("username");
-        javaMailSender.setPassword("password");
+//        javaMailSender.setUsername("name");
+//        javaMailSender.setPassword("password");
         
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");
@@ -30,5 +28,5 @@ public class CustomMvcConfig extends MvcConfig {
         javaMailSender.setJavaMailProperties(properties);        
         
         return javaMailSender;
-    }*/
+    }
 }

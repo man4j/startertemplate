@@ -1,9 +1,9 @@
-<#import "/lib/composition.ftl" as ui />
+<#import "/lib/composition.ftlh" as ui />
 <#import "/spring.ftl" as spring />
-<#import "/lib/util.ftl" as util />
-<#import "/component/error_block.ftl" as errorBlock />
+<#import "/lib/util.ftlh" as util />
+<#import "/component/error_block.ftlh" as errorBlock />
 
-<@ui.composition "/base.ftl">
+<@ui.composition "/base.ftlh">
   <#assign title in ui>
     Restore
   </#assign>

@@ -1,14 +1,13 @@
 <#import "/spring.ftl" as spring/>
-<#import "/lib/composition.ftl" as ui />
-<#import "/lib/util.ftl" as util />
-<#import "/component/error_block.ftl" as errorBlock />
+<#import "/lib/composition.ftlh" as ui />
+<#import "/lib/util.ftlh" as util />
+<#import "/component/error_block.ftlh" as errorBlock />
 
-<@ui.composition "/base.ftl">  
+<@ui.composition "/base.ftlh">  
   <#assign title in ui>
     Signin  
   </#assign>
   
-  <#--
   <@ui.addScript>
     <script defer="defer">
       $(document).ready(function() {
@@ -30,16 +29,15 @@
         });
       });
     </script>
-  </@ui.addScript>-->
+  </@ui.addScript>
   
   <#assign content in ui>
     <@errorBlock.show />
-    
+
     <div>
-      <#--
       <h2>
         <form action="<@spring.url '/auth/facebook'/>" method="POST">
-          <input type="hidden" name="scope" value="offline_access" />
+          <input type="hidden" name="scope" value="public_profile,email,user_friends" />
           
           <a class="connectButton" href="#">
             <img style="width:25px; padding-right:8px;" class="" src="<@util.r '/img/facebook_flat.png' />" alt="Facebook" />
@@ -47,7 +45,7 @@
         </form>
         
         <@spring.messageText "signin.enter" "Вход" />
-      </h2>-->
+      </h2>
       
       <div class="row">
         <div class="col-xs-4 col-xs-offset-4">

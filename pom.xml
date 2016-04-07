@@ -10,16 +10,16 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     
-    <version.spring>4.2.0.RC1</version.spring>
+    <version.spring>4.2.5.RELEASE</version.spring>
     <version.junit>4.12</version.junit>
-    <version.security>4.0.1.RELEASE</version.security>
+    <version.security>4.0.4.RELEASE</version.security>
   </properties>
   
   <dependencies>
     <dependency>
       <groupId>starter</groupId>
       <artifactId>starter</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.3</version>
     </dependency>
     
     <dependency>
@@ -55,10 +55,9 @@
   </dependencies>
   
   <build>    
-    <plugins>    
-      <plugin>
+    <plugins>      <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
         <executions>
           <execution>
             <phase>prepare-package</phase>
@@ -78,7 +77,7 @@
     
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.4.3</version>
         <executions>
           <execution>
             <phase>package</phase>

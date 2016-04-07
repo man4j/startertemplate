@@ -1,5 +1,5 @@
-<#import "/lib/composition.ftl" as ui />
-<#import "/lib/util.ftl" as util />
+<#import "/lib/composition.ftlh" as ui />
+<#import "/lib/util.ftlh" as util />
 <#import "/spring.ftl" as spring/>
 
 <!DOCTYPE html>

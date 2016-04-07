@@ -29,7 +29,7 @@ public class EmailSignInMessageGenerator {
         map.put("baseUrl", RequestUtil.getAppURL(httpRequest));
         map.put("password", decryptedPassword);        
         
-        String body = generator.createMessageFromTemplate("/email/email_signin.ftl", map);
+        String body = generator.createMessageFromTemplate("/email/email_signin.ftlh", map);
         
         return new SimpleMessage("support@example.com", "SUPPORT", profile.getEmail(), body, "Вход в аккаунт");
     }

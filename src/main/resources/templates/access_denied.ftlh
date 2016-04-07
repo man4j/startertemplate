@@ -1,8 +1,8 @@
-<#import "/lib/composition.ftl" as ui />
-<#import "/lib/util.ftl" as util />
+<#import "/lib/composition.ftlh" as ui />
+<#import "/lib/util.ftlh" as util />
 <#import "/spring.ftl" as spring/>
 
-<@ui.composition "/base.ftl">  
+<@ui.composition "/base.ftlh">  
   <#assign title in ui>
     Index  
   </#assign>
@@ -13,7 +13,7 @@
   </@ui.addScript>
   
   <#assign content in ui>
-    Index page
+    Access Denied
     
     <hr />
     
