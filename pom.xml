@@ -19,7 +19,7 @@
     <dependency>
       <groupId>starter</groupId>
       <artifactId>starter</artifactId>
-      <version>0.3</version>
+      <version>0.31</version>
     </dependency>
     
     <dependency>
@@ -144,6 +144,11 @@
     <repository>
       <id>Spring Milestone</id>
       <url>http://repo.spring.io/libs-milestone/</url>
+    </repository>
+    
+    <repository>
+      <id>Starter</id>
+      <url>https://raw.githubusercontent.com/man4j/starter/master/maven</url>
     </repository>
   </repositories>
 </project>
