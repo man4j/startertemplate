@@ -1,5 +1,7 @@
 package template.model;
 
+import java.util.Locale;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 public class SigninForm {
@@ -12,7 +14,7 @@ public class SigninForm {
     private boolean rememberMe;
 
     public String getEmail() {
-        return email.toLowerCase();
+        return email.toLowerCase(Locale.US);
     }
 
     public void setEmail(String email) {

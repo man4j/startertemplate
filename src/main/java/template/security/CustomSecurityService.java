@@ -6,5 +6,5 @@ import starter.security.SecurityService;
 
 @Service
 public class CustomSecurityService extends SecurityService {
-
+    //empty
 }

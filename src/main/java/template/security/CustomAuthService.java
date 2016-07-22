@@ -6,5 +6,5 @@ import starter.security.AuthService;
 
 @Service
 public class CustomAuthService extends AuthService {
-
+    //empty
 }

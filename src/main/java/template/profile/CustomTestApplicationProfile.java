@@ -8,5 +8,5 @@ import starter.profile.TestApplicationProfile;
 @Component
 @Profile("test")
 public class CustomTestApplicationProfile extends TestApplicationProfile {
-
+    //empty
 }

@@ -9,7 +9,7 @@ import starter.security.ProfileService;
 import template.model.UserProfile;
 
 @Service
-public class CustomProfileService implements ProfileService {
+public class CustomInMemoryProfileService implements ProfileService {
     private ConcurrentHashMap<String, AbstractProfile> profiles = new ConcurrentHashMap<>();
     
     @Override

@@ -6,5 +6,5 @@ import starter.security.SocialSignUp;
 
 @Service
 public class CustomSocialSignUp extends SocialSignUp {
-
+    //empty
 }

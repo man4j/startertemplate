@@ -6,5 +6,5 @@ import starter.config.SecurityConfig;
 
 @ComponentScan({"template.security"})
 public class CustomSecurityConfig extends SecurityConfig {
-
+    //empty
 }

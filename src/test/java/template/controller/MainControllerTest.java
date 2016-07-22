@@ -1,12 +1,9 @@
 package template.controller;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
@@ -14,12 +11,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 public class MainControllerTest extends ControllerIntegrationTestsSupport {
-    @Autowired
-    private HttpServletRequest request;
-    
-    @Autowired
-    private HttpServletResponse response;
-    
     @Test
     public void shouldReturnSecurityRedirect() throws Exception {
         getMockMvc().perform(MockMvcRequestBuilders.get("/")).andExpect(MockMvcResultMatchers.redirectedUrlPattern("**/auth/signin"));

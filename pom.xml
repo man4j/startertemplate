@@ -3,36 +3,61 @@
   <groupId>template</groupId>
   <artifactId>starter-template</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>docker</packaging>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     
-    <version.spring>4.2.5.RELEASE</version.spring>
+    <workdir>/opt/${project.artifactId}</workdir>
+    <repoUser>man4j</repoUser>
+    
+    <version.spring>4.3.1.RELEASE</version.spring>
+    <version.security>4.1.1.RELEASE</version.security>
     <version.junit>4.12</version.junit>
-    <version.security>4.0.4.RELEASE</version.security>
+    <version.mockito>2.0.2-beta</version.mockito>
   </properties>
   
   <dependencies>
     <dependency>
       <groupId>starter</groupId>
       <artifactId>starter</artifactId>
-      <version>0.31</version>
+      <version>0.34</version>
     </dependency>
     
+    <dependency>
+      <groupId>com.ning</groupId>
+      <artifactId>async-http-client</artifactId>
+      <version>1.9.38</version>
+    </dependency>
+    
+    <!-- test deps -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <version>${version.spring}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${version.junit}</version>
+      <scope>test</scope>
+    </dependency>
+      
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>${version.mockito}</version>
       <scope>test</scope>
     </dependency>
     
@@ -134,6 +159,109 @@
                 </filter>
               </filters>             
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <version>0.15.9</version>
+        <executions>
+          <execution>
+            <phase>package</phase><!-- Прописываем фазу ручками, чтобы Maven учел порядок вызова плагинов (1.shade 2.docker) -->
+            <goals>
+              <goal>build</goal>
+            </goals> 
+          </execution>
+        </executions>
+        <configuration>
+          <authConfig>
+            <serverId>hub.docker.com</serverId>
+          </authConfig>
+          <dockerHost>tcp://91.201.42.128:2376</dockerHost>
+          <showLogs>service</showLogs><!-- Выводить логи для контейнера service -->
+          <images>
+            <image>
+              <alias>${project.artifactId}</alias>
+              <name>${repoUser}/${project.artifactId}:${user.name}</name>
+              <build>
+                <from>java</from>
+                <assembly>
+                  <basedir>${workdir}</basedir>
+                  <descriptorRef>artifact</descriptorRef>
+                </assembly>
+                <workdir>${workdir}</workdir>
+                <cmd>
+                  <shell>java -Dspring.profiles.active=test -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
+                </cmd>
+              </build>
+              <run>
+                <ports>
+                  <port>${undertow.host}:${undertow.port}:8080</port>
+                </ports>
+                <log>
+                  <enabled>true</enabled>
+                  <prefix>UNDERTOW</prefix>
+                  <color>yellow</color>
+                </log>
+                <wait>
+                  <time>60000</time>
+                  <http>
+                    <url>http://${undertow.host}:${undertow.port}</url>
+                    <method>GET</method>
+                    <status>200</status>
+                  </http>
+                </wait>
+              </run>
+            </image>
+          </images>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <excludes>
+            <exclude>integration/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <includes>
+            <include>integration/**</include>
+          </includes>
+          <systemPropertyVariables>
+            <undertow.url>http://${docker.host.address}:${undertow.port}</undertow.url>
+          </systemPropertyVariables>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>3.0.4</version>
+        <configuration>
+          <effort>Max</effort>
+          <threshold>Low</threshold>
+          <maxRank>20</maxRank>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

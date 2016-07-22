@@ -1,14 +1,9 @@
 package template.controller;
 
-import template.config.CustomMvcConfig;
-import template.config.CustomSecurityConfig;
-import template.config.CustomSocialConfig;
-
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,6 +14,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import starter.security.ProfileService;
 import starter.security.SecurityService;
+import template.config.CustomMvcConfig;
+import template.config.CustomSecurityConfig;
+import template.config.CustomSocialConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -27,9 +25,6 @@ import starter.security.SecurityService;
 public class ControllerIntegrationTestsSupport {
     @Autowired
     private WebApplicationContext wac;
-    
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
     
     @Autowired
     private SecurityService securityService;

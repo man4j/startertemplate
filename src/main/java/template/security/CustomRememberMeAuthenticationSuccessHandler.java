@@ -6,5 +6,5 @@ import starter.security.RememberMeAuthenticationSuccessHandler;
 
 @Service
 public class CustomRememberMeAuthenticationSuccessHandler extends RememberMeAuthenticationSuccessHandler {
-
+    //empty
 }

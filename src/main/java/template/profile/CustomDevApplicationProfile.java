@@ -8,5 +8,5 @@ import starter.profile.DevApplicationProfile;
 @Component
 @Profile("dev")
 public class CustomDevApplicationProfile extends DevApplicationProfile {
-
+    //empty
 }

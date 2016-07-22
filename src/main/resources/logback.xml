@@ -5,14 +5,30 @@
     </encoder>
   </appender>
   
-  <!-- 
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/application-human.log.%d{yyyy-MM-dd}</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    
+    <encoder>      
+      <pattern>[%level] %d{dd.MM.yy HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <if condition='p("spring.profiles.active").equals("dev")'>
     <then>
-      <logger name="com.n1global.acc" level="DEBUG" />          
-    </then>    
-  </if> -->
-  
-  <root level="debug">
-    <appender-ref ref="STDOUT" />
-  </root>
+      <root level="debug">
+        <appender-ref ref="STDOUT" />
+      </root>
+    </then>
+    <else>
+      <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+      </root>
+    </else>
+  </if>  
 </configuration>

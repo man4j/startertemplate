@@ -3,12 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>template</groupId>
   <artifactId>starter-template</artifactId>
+  <packaging>docker</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
         <executions>
           <execution>
             <phase>prepare-package</phase>
@@ -27,7 +28,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.4.3</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -87,6 +88,109 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.15.9</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <authConfig>
+            <serverId>hub.docker.com</serverId>
+          </authConfig>
+          <dockerHost>tcp://91.201.42.128:2376</dockerHost>
+          <showLogs>service</showLogs>
+          <images>
+            <image>
+              <alias>${project.artifactId}</alias>
+              <name>${repoUser}/${project.artifactId}:${user.name}</name>
+              <build>
+                <from>java</from>
+                <assembly>
+                  <basedir>${workdir}</basedir>
+                  <descriptorRef>artifact</descriptorRef>
+                </assembly>
+                <workdir>${workdir}</workdir>
+                <cmd>
+                  <shell>java -Dspring.profiles.active=test -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
+                </cmd>
+              </build>
+              <run>
+                <ports>
+                  <port>${undertow.host}:${undertow.port}:8080</port>
+                </ports>
+                <log>
+                  <enabled>true</enabled>
+                  <prefix>UNDERTOW</prefix>
+                  <color>yellow</color>
+                </log>
+                <wait>
+                  <time>60000</time>
+                  <http>
+                    <url>http://${undertow.host}:${undertow.port}</url>
+                    <method>GET</method>
+                    <status>200</status>
+                  </http>
+                </wait>
+              </run>
+            </image>
+          </images>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <excludes>
+            <exclude>integration/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.19.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <includes>
+            <include>integration/**</include>
+          </includes>
+          <systemPropertyVariables>
+            <undertow.url>http://${docker.host.address}:${undertow.port}</undertow.url>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>3.0.4</version>
+        <executions>
+          <execution>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <effort>Max</effort>
+          <threshold>Low</threshold>
+          <maxRank>20</maxRank>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <repositories>
@@ -94,13 +198,23 @@
       <id>Spring Milestone</id>
       <url>http://repo.spring.io/libs-milestone/</url>
     </repository>
+    <repository>
+      <id>Starter</id>
+      <url>https://raw.githubusercontent.com/man4j/starter/master/maven</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>4.2.0.RC1</version>
+      <version>4.3.1.RELEASE</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -115,9 +229,15 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>2.0.2-beta</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
-      <version>4.0.1.RELEASE</version>
+      <version>4.1.1.RELEASE</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -132,12 +252,16 @@
     </dependency>
   </dependencies>
   <properties>
-    <version.junit>4.12</version.junit>
-    <version.spring>4.2.0.RC1</version.spring>
-    <version.security>4.0.1.RELEASE</version.security>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <version.security>4.1.1.RELEASE</version.security>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <repoUser>man4j</repoUser>
+    <version.junit>4.12</version.junit>
+    <version.spring>4.3.1.RELEASE</version.spring>
+    <version.mockito>2.0.2-beta</version.mockito>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <workdir>/opt/${project.artifactId}</workdir>
   </properties>
 </project>
 
