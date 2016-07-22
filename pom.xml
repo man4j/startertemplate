@@ -179,7 +179,7 @@
           <authConfig>
             <serverId>hub.docker.com</serverId>
           </authConfig>
-          <dockerHost>tcp://91.201.42.128:2376</dockerHost>
+          <!-- <dockerHost>tcp://91.201.42.128:2376</dockerHost>  -->
           <showLogs>service</showLogs><!-- Выводить логи для контейнера service -->
           <images>
             <image>
