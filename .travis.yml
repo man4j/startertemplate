@@ -1,9 +1,4 @@
 ﻿sudo: required
-
 language: java
-
-services:
-  - docker
-
-script:
-- bundle exec mvn verify
+services: docker
+script: mvn verify
