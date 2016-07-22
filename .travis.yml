@@ -2,5 +2,6 @@
 jdk:
   - oraclejdk8
 sudo: required
-services: docker
+services:
+  - docker
 script: mvn verify
