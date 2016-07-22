@@ -1,5 +1,9 @@
-﻿sudo: required
-language: java
+﻿language: java
+
+sudo: required
+
 jdk: oraclejdk8
+
 services: docker
+
 script: mvn verify
