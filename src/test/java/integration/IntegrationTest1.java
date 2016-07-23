@@ -12,8 +12,6 @@ public class IntegrationTest1 {
     public void shouldWork() throws InterruptedException, ExecutionException {
         String baseUrl = System.getProperty("undertow.url");
         
-        System.out.println(baseUrl);
-        
         try(AsyncHttpClient client = new AsyncHttpClient()) {
             Assert.assertEquals(200, client.prepareGet(baseUrl + "/auth/signin").execute().get().getStatusCode());
         }

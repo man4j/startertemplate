@@ -67,7 +67,7 @@
               </label>
             </div>
               
-            <button type="submit" class="btn btn-lg btn-primary btn-block"><@spring.messageText 'signin.send' 'Войти'/></button>
+            <button id="submitButton" type="submit" class="btn btn-lg btn-primary btn-block"><@spring.messageText 'signin.send' 'Войти'/></button>
           </form>          
         </div>
         <div class="row">

@@ -109,7 +109,7 @@
           <showLogs>service</showLogs>
           <images>
             <image>
-              <alias>${project.artifactId}</alias>
+              <alias>service</alias>
               <name>${repoUser}/${project.artifactId}:${tagName}</name>
               <build>
                 <from>java</from>
@@ -126,11 +126,6 @@
                 <ports>
                   <port>${undertow.host}:${undertow.port}:8080</port>
                 </ports>
-                <log>
-                  <enabled>true</enabled>
-                  <prefix>UNDERTOW</prefix>
-                  <color>yellow</color>
-                </log>
                 <wait>
                   <time>60000</time>
                   <http>
@@ -138,6 +133,18 @@
                     <method>GET</method>
                     <status>200</status>
                   </http>
+                </wait>
+              </run>
+            </image>
+            <image>
+              <alias>selenium</alias>
+              <name>selenium/standalone-chrome</name>
+              <run>
+                <ports>
+                  <port>${selenium.host}:${selenium.port}:4444</port>
+                </ports>
+                <wait>
+                  <log>Selenium Server is up and running</log>
                 </wait>
               </run>
             </image>
@@ -170,6 +177,8 @@
           </includes>
           <systemPropertyVariables>
             <undertow.url>http://${docker.host.address}:${undertow.port}</undertow.url>
+            <selenium.url>http://${docker.host.address}:${selenium.port}/wd/hub</selenium.url>
+            <undertow.internalUrl>http://${docker.container.service.ip}:8080</undertow.internalUrl>
           </systemPropertyVariables>
         </configuration>
       </plugin>
@@ -262,6 +271,46 @@
         <exclusion>
           <artifactId>*</artifactId>
           <groupId>org.springframework.security</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>2.53.1</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>selenium-chrome-driver</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>selenium-edge-driver</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>htmlunit-driver</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>selenium-firefox-driver</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>selenium-ie-driver</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>selenium-safari-driver</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>selenium-support</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>selenium-leg-rc</artifactId>
+          <groupId>org.seleniumhq.selenium</groupId>
         </exclusion>
       </exclusions>
     </dependency>
