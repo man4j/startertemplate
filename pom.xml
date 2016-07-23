@@ -79,6 +79,23 @@
     </dependency>
   </dependencies>
   
+  <profiles>
+    <profile>
+      <id>ci-server</id>
+      <properties>
+        <dockerHost></dockerHost>
+        <tagName>latest</tagName>
+      </properties>
+    </profile>
+    <profile>
+      <id>docker-host</id>
+      <properties>
+        <dockerHost>tcp://91.201.42.128:2376</dockerHost>
+        <tagName>${user.name}</tagName>
+      </properties>
+    </profile>
+  </profiles>
+  
   <build>    
     <plugins>      <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -179,12 +196,12 @@
           <authConfig>
             <serverId>hub.docker.com</serverId>
           </authConfig>
-          <!-- <dockerHost>tcp://91.201.42.128:2376</dockerHost>  -->
+          <dockerHost>${dockerHost}</dockerHost>
           <showLogs>service</showLogs><!-- Выводить логи для контейнера service -->
           <images>
             <image>
               <alias>${project.artifactId}</alias>
-              <name>${repoUser}/${project.artifactId}:${user.name}</name>
+              <name>${repoUser}/${project.artifactId}:${tagName}</name>
               <build>
                 <from>java</from>
                 <assembly>

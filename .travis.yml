@@ -1,5 +1,0 @@
-﻿jdk: oraclejdk8
-language: java
-sudo: required
-services: docker
-script: mvn verify
