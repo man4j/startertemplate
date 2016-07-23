@@ -82,6 +82,9 @@
   <profiles>
     <profile>
       <id>ci-server</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <properties>
         <dockerHost></dockerHost>
         <tagName>latest</tagName>
