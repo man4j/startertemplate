@@ -249,9 +249,6 @@
           </execution>
         </executions>
         <configuration>
-          <authConfig>
-            <serverId>hub.docker.com</serverId>
-          </authConfig>
           <dockerHost>${dockerHost}</dockerHost>
           <showLogs>true</showLogs><!-- or service,selenium etc -->
           <images>
