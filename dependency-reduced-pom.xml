@@ -131,10 +131,14 @@
                 </assembly>
                 <workdir>${workdir}</workdir>
                 <cmd>
-                  <shell>java -Dspring.profiles.active=test -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
+                  <shell>java -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
                 </cmd>
               </build>
               <run>
+                <env>
+                  <spring_profiles_active>test</spring_profiles_active>
+                  <couchdb_url>http://${docker.host.address}:${couchdb.port}</couchdb_url>
+                </env>
                 <ports>
                   <port>${undertow.host}:${undertow.port}:8080</port>
                 </ports>
@@ -217,7 +221,7 @@
   </build>
   <profiles>
     <profile>
-      <id>ci-server</id>
+      <id>unix</id>
       <properties>
         <tagName>latest</tagName>
       </properties>
@@ -228,6 +232,44 @@
         <dockerHost>tcp://91.201.42.128:2376</dockerHost>
         <tagName>${user.name}</tagName>
       </properties>
+    </profile>
+    <profile>
+      <id>man4j</id>
+      <properties>
+        <couchdb.port>7777</couchdb.port>
+      </properties>
+    </profile>
+    <profile>
+      <id>run-deps</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.15.9</version>
+            <extensions>true</extensions>
+            <configuration>
+              <dockerHost>${dockerHost}</dockerHost>
+              <showLogs>true</showLogs>
+              <removeVolumes>true</removeVolumes>
+              <images>
+                <image>
+                  <alias>couchdb</alias>
+                  <name>couchdb</name>
+                  <run>
+                    <ports>
+                      <port>${couchdb.port}:5984</port>
+                    </ports>
+                    <wait>
+                      <log>Apache CouchDB has started</log>
+                    </wait>
+                  </run>
+                </image>
+              </images>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
   <repositories>

@@ -88,9 +88,11 @@
   
   <profiles>
     <profile>
-      <id>ci-server</id>
+      <id>unix</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <os>
+          <family>unix</family>
+        </os>
       </activation>
       <properties>
         <dockerHost></dockerHost>
@@ -99,6 +101,11 @@
     </profile>
     <profile>
       <id>docker-host</id>
+      <activation>
+        <os>
+          <family>windows</family>
+        </os>
+      </activation>
       <properties>
         <dockerHost>tcp://91.201.42.128:2376</dockerHost>
         <tagName>${user.name}</tagName>
@@ -272,10 +279,14 @@
                 </assembly>
                 <workdir>${workdir}</workdir>
                 <cmd>
-                  <shell>java -Dspring.profiles.active=test -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
+                  <shell>java -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
                 </cmd>
               </build>
               <run>
+                <env>
+                  <spring_profiles_active>test</spring_profiles_active>
+                  <couchdb_url>http://${docker.host.address}:${couchdb.port}</couchdb_url>
+                </env>
                 <ports>
                   <port>${undertow.host}:${undertow.port}:8080</port>
                 </ports>
