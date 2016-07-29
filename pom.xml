@@ -260,7 +260,7 @@
               <name>couchdb</name>
               <run>
                 <ports>
-                  <port>${couchdb.host}:${couchdb.port}:5984</port>
+                  <port>${couchdb.port}:5984</port>
                 </ports>
                 <wait>
                   <log>Apache CouchDB has started</log>
@@ -285,7 +285,7 @@
               <run>
                 <env>
                   <spring_profiles_active>test</spring_profiles_active>
-                  <couchdb_url>http://${couchdb.host}:${couchdb.port}</couchdb_url>
+                  <couchdb_url>http://${docker.container.couchdb.ip}:5984</couchdb_url>
                 </env>
                 <ports>
                   <port>${undertow.host}:${undertow.port}:8080</port>
