@@ -18,7 +18,7 @@
     </encoder>
   </appender>
 
-  <if condition='p("spring.profiles.active").equals("test") || p("spring.profiles.active").equals("prod")'>
+  <if condition='p("spring.profiles.active").equals("")'>
     <then>
       <root level="info">
         <appender-ref ref="STDOUT" />
