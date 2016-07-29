@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-RunDeps</actionName>
+            <displayName>RunDeps</displayName>
+            <goals>
+                <goal>docker:start</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>man4j</activatedProfile>
+                <activatedProfile>docker-host</activatedProfile>
+                <activatedProfile>run-deps</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-StopDeps</actionName>
+            <displayName>StopDeps</displayName>
+            <goals>
+                <goal>docker:stop</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>man4j</activatedProfile>
+                <activatedProfile>docker-host</activatedProfile>
+                <activatedProfile>run-deps</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>

@@ -104,10 +104,49 @@
         <tagName>${user.name}</tagName>
       </properties>
     </profile>
+    <profile>
+      <id>man4j</id>
+      <properties>
+        <couchdb.port>7777</couchdb.port>
+      </properties>
+    </profile>
+    <profile>
+      <id>run-deps</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <version>0.15.9</version>
+            <configuration>
+              <dockerHost>${dockerHost}</dockerHost>
+              <showLogs>true</showLogs><!-- or service,selenium etc -->
+              <removeVolumes>true</removeVolumes>
+              <images>
+                <image>
+                 <alias>couchdb</alias>
+                  <name>couchdb</name>
+                  <run>
+                    <ports>
+                     <port>${couchdb.port}:5984</port>
+                    </ports>
+                    <wait>
+                      <log>Apache CouchDB has started</log>
+                   </wait>
+                  </run>
+                </image>
+              </images>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
   
   <build>    
-    <plugins>      <plugin>
+    <plugins>
+      <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <executions>
@@ -196,7 +235,7 @@
         <version>0.15.9</version>
         <executions>
           <execution>
-            <phase>package</phase><!-- Прописываем фазу ручками, чтобы Maven учел порядок вызова плагинов (1.shade 2.docker) -->
+            <phase>package</phase><!-- ����������� ���� �������, ����� Maven ���� ������� ������ �������� (1.shade 2.docker) -->
             <goals>
               <goal>build</goal>
             </goals> 
@@ -207,8 +246,21 @@
             <serverId>hub.docker.com</serverId>
           </authConfig>
           <dockerHost>${dockerHost}</dockerHost>
-          <showLogs>service</showLogs><!-- Выводить логи для контейнера в котором наше приложение -->
+          <showLogs>true</showLogs><!-- or service,selenium etc -->
           <images>
+            <image>
+              <alias>couchdb</alias>
+              <name>couchdb</name>
+              <run>
+                <ports>
+                  <port>${couchdb.port}:5984</port>
+                </ports>
+                <wait>
+                  <log>Apache CouchDB has started</log>
+                </wait>
+              </run>
+            </image>
+            
             <image>
               <alias>service</alias>
               <name>${repoUser}/${project.artifactId}:${tagName}</name>
@@ -243,11 +295,8 @@
               <name>selenium/standalone-chrome</name>
               <run>
                 <ports>
-                  <port>${selenium.host}:${selenium.port}:4444</port>
+                  <port>${selenium.port}:4444</port>
                 </ports>
-                <links><!-- Эта секция вроде не обязательно, т.к. контейнеры и так видят друг друга в сети -->
-                  <link>service:web</link>
-                </links>
                 <wait>
                   <log>Selenium Server is up and running</log>
                 </wait>
@@ -275,6 +324,7 @@
           <systemPropertyVariables>
             <undertow.url>http://${docker.host.address}:${undertow.port}</undertow.url>
             <selenium.url>http://${docker.host.address}:${selenium.port}/wd/hub</selenium.url>
+            <couchdb.url>http://${docker.host.address}:${couchdb.port}</couchdb.url>
             <undertow.internalUrl>http://${docker.container.service.ip}:8080</undertow.internalUrl>
           </systemPropertyVariables>
         </configuration>

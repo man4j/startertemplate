@@ -3,11 +3,9 @@ package template.profile;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import starter.profile.ApplicationProfile;
-
 @Component
 @Profile("prod")
-public class CustomProdApplicationProfile implements ApplicationProfile {
+public class CustomProdApplicationProfile extends CustomApplicationProfile {
     @Override
     public int getMessagesCacheInterval() {
         return Integer.MAX_VALUE;
@@ -16,5 +14,10 @@ public class CustomProdApplicationProfile implements ApplicationProfile {
     @Override
     public boolean isTemplateCacheEnabled() {
         return true;
+    }
+
+    @Override
+    public String getCouchDbUrl() {
+        return "http://91.201.42.128:5984";
     }
 }

@@ -106,8 +106,20 @@
             <serverId>hub.docker.com</serverId>
           </authConfig>
           <dockerHost>${dockerHost}</dockerHost>
-          <showLogs>service</showLogs>
+          <showLogs>true</showLogs>
           <images>
+            <image>
+              <alias>couchdb</alias>
+              <name>couchdb</name>
+              <run>
+                <ports>
+                  <port>${couchdb.port}:5984</port>
+                </ports>
+                <wait>
+                  <log>Apache CouchDB has started</log>
+                </wait>
+              </run>
+            </image>
             <image>
               <alias>service</alias>
               <name>${repoUser}/${project.artifactId}:${tagName}</name>
@@ -141,7 +153,7 @@
               <name>selenium/standalone-chrome</name>
               <run>
                 <ports>
-                  <port>${selenium.host}:${selenium.port}:4444</port>
+                  <port>${selenium.port}:4444</port>
                 </ports>
                 <wait>
                   <log>Selenium Server is up and running</log>
@@ -178,6 +190,7 @@
           <systemPropertyVariables>
             <undertow.url>http://${docker.host.address}:${undertow.port}</undertow.url>
             <selenium.url>http://${docker.host.address}:${selenium.port}/wd/hub</selenium.url>
+            <couchdb.url>http://${docker.host.address}:${couchdb.port}</couchdb.url>
             <undertow.internalUrl>http://${docker.container.service.ip}:8080</undertow.internalUrl>
           </systemPropertyVariables>
         </configuration>

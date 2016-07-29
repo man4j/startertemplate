@@ -16,4 +16,13 @@ public class IntegrationTest1 {
             Assert.assertEquals(200, client.prepareGet(baseUrl + "/auth/signin").execute().get().getStatusCode());
         }
     }
+    
+    @Test
+    public void shouldWorkWithCouchDb() throws InterruptedException, ExecutionException {
+        String baseUrl = System.getProperty("couchdb.url");
+        
+        try(AsyncHttpClient client = new AsyncHttpClient()) {
+            Assert.assertEquals(200, client.prepareGet(baseUrl).execute().get().getStatusCode());
+        }
+    }
 }

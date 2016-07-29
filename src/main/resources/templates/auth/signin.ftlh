@@ -34,6 +34,9 @@
   <#assign content in ui>
     <@errorBlock.show />
 
+    ${couchdbPort}
+    ${couchdbResponse}
+
     <div>
       <h2>
         <form action="<@spring.url '/auth/facebook'/>" method="POST">

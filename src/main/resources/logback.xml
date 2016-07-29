@@ -18,16 +18,16 @@
     </encoder>
   </appender>
 
-  <if condition='p("spring.profiles.active").equals("dev")'>
+  <if condition='p("spring.profiles.active").equals("test") || p("spring.profiles.active").equals("prod")'>
     <then>
-      <root level="debug">
-        <appender-ref ref="STDOUT" />
-      </root>
-    </then>
-    <else>
       <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
+      </root>
+    </then>
+    <else>
+      <root level="debug">
+        <appender-ref ref="STDOUT" />
       </root>
     </else>
   </if>  
