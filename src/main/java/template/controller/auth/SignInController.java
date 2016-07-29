@@ -39,6 +39,8 @@ public class SignInController {
     
     @RequestMapping(method = RequestMethod.GET)
     String get(@SuppressWarnings("unused") @ModelAttribute("form") SigninForm form, Model model) throws InterruptedException, ExecutionException, IOException {
+        System.out.println(applicationProfile.getCouchDbUrl());
+        
         try (AsyncHttpClient client = new AsyncHttpClient()) {
             String body = client.prepareGet(applicationProfile.getCouchDbUrl()).execute().get().getResponseBody();
             
