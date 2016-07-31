@@ -18,6 +18,6 @@ public class CustomProdApplicationProfile extends CustomApplicationProfile {
 
     @Override
     public String getCouchDbUrl() {
-        return "http://91.201.42.128:5984";
+        return "http://mycouchdb:5984";
     }
 }

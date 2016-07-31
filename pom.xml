@@ -278,6 +278,9 @@
                 <cmd>
                   <shell>java -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
                 </cmd>
+                <ports>
+                  <port>8080</port>
+                </ports>
               </build>
               <run>
                 <env>
