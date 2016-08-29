@@ -1,8 +1,5 @@
 package template.controller.auth;
 
-import com.ning.http.client.AsyncHttpClient;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -10,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +16,6 @@ import starter.model.AbstractProfile;
 import starter.security.ProfileService;
 import starter.security.SecurityService;
 import template.model.SigninForm;
-import template.profile.CustomApplicationProfile;
 
 @Controller
 @RequestMapping("/auth/signin")
@@ -34,21 +29,8 @@ public class SignInController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    @Autowired
-    private CustomApplicationProfile applicationProfile;
-    
     @RequestMapping(method = RequestMethod.GET)
-    String get(@SuppressWarnings("unused") @ModelAttribute("form") SigninForm form, Model model) throws InterruptedException, ExecutionException, IOException {
-        System.out.println(applicationProfile.getCouchDbUrl());
-        
-        try (AsyncHttpClient client = new AsyncHttpClient()) {
-            String body = client.prepareGet(applicationProfile.getCouchDbUrl()).execute().get().getResponseBody();
-            
-            model.addAttribute("couchdbResponse", body);
-        }
-      
-        model.addAttribute("couchdbPort", applicationProfile.getCouchDbUrl());
-        
+    String get(@SuppressWarnings("unused") @ModelAttribute("form") SigninForm form) {       
         return "/auth/signin";
     }
 

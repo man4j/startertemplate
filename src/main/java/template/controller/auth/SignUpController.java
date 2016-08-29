@@ -34,7 +34,7 @@ public class SignUpController {
     @RequestMapping(method = RequestMethod.GET)
     public String get(@SuppressWarnings("unused") @ModelAttribute("form") SignUpForm form) {
         return "/auth/signup";
-    }
+    } 
 
     @RequestMapping(method = RequestMethod.POST)
     public String signup(@ModelAttribute("form") @Valid SignUpForm form, BindingResult result) {
