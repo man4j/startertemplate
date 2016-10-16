@@ -18,11 +18,11 @@ public class CustomIntegrationApplicationProfile extends CustomApplicationProfil
     
     @Override
     public String getDbUrl() {
-        String dbUrl =  isAutomated() ? System.getProperty("db.url") : super.getDbUrl();
+        String url =  isAutomated() ? System.getProperty("db.url") : super.getDbUrl();
         
-        System.out.println("Database URL: " + dbUrl);
+        System.out.println("Database URL for Spring integration tests: " + url);
         
-        return dbUrl;
+        return url;
     }
 
     @Override
@@ -32,11 +32,7 @@ public class CustomIntegrationApplicationProfile extends CustomApplicationProfil
 
     @Override
     public String getDbPassword() {
-        String password = isAutomated() ?  System.getProperty("db.password") : "root";
-        
-        System.out.println("Database password: " + password);
-        
-        return password;
+        return isAutomated() ?  System.getProperty("db.password") : "root";
     }
     
     @Override
@@ -45,8 +41,6 @@ public class CustomIntegrationApplicationProfile extends CustomApplicationProfil
     }
     
     private boolean isAutomated() {
-        String property = System.getProperty("test.automated");
-        
-        return property != null && Boolean.getBoolean(property);
+        return Boolean.getBoolean("test.automated");
     }
 }

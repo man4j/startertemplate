@@ -487,7 +487,7 @@
             <web.url>http://${docker.host.address}:${web.port}</web.url>
             <selenium.url>http://${docker.host.address}:${selenium.port}/wd/hub</selenium.url>
             <selenium.vnc>${docker.host.address}:${selenium.vnc.port}</selenium.vnc>
-            <db.url>http://${docker.host.address}:${test_db.port}</db.url>
+            <db.url>jdbc:mysql://${docker.host.address}:${test_db.port}</db.url>
             <db.password>${db.password}</db.password>
           </systemPropertyVariables>
         </configuration>

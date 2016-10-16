@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Дамп данных таблицы dev_db.users: ~2 rows (приблизительно)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `roles`, `email`, `password`, `confirm_uuid`, `confirmed`) VALUES
-        ('man4j@ya.ru', NULL, 'man4j@ya.ru', '$2a$10$o6cj5gx71RMMxvIKkaJCMen7w4ZeVIeM7lNTR2OC/wO/5sb2xffIi', '264e641b-cec8-44f5-9120-28e4b4011d19', 1);
+        ('man4j@ya.ru', NULL, 'man4j@ya.ru', '$2a$10$9pLMk62hoFXyvmpMgE6LXuqNMavUm9yx6iQpVoB6/z3kmz1siQzqO', '264e641b-cec8-44f5-9120-28e4b4011d19', 1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

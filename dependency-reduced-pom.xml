@@ -146,7 +146,7 @@
           <images>
             <image>
               <alias>app_db</alias>
-              <name>db:latest</name>
+              <name>${docker.repo.user}/db:latest</name>
               <run>
                 <ports>
                   <port>${app_db.port}:3306</port>
@@ -163,7 +163,7 @@
             </image>
             <image>
               <alias>test_db</alias>
-              <name>db:latest</name>
+              <name>${docker.repo.user}/db:latest</name>
               <run>
                 <ports>
                   <port>${test_db.port}:3306</port>
@@ -220,7 +220,7 @@
             </image>
             <image>
               <alias>selenium</alias>
-              <name>selenium/standalone-chrome-debug</name>
+              <name>selenium/standalone-firefox-debug</name>
               <run>
                 <ports>
                   <port>${selenium.port}:4444</port>
@@ -311,7 +311,7 @@
             <web.url>http://${docker.host.address}:${web.port}</web.url>
             <selenium.url>http://${docker.host.address}:${selenium.port}/wd/hub</selenium.url>
             <selenium.vnc>${docker.host.address}:${selenium.vnc.port}</selenium.vnc>
-            <db.url>http://${docker.host.address}:${test_db.port}</db.url>
+            <db.url>jdbc:mysql://${docker.host.address}:${test_db.port}</db.url>
             <db.password>${db.password}</db.password>
           </systemPropertyVariables>
         </configuration>
@@ -372,7 +372,7 @@
               <images>
                 <image>
                   <alias>db</alias>
-                  <name>db:latest</name>
+                  <name>${docker.repo.user}/db:latest</name>
                   <build>
                     <from>mysql:5.7</from>
                     <nocache>true</nocache>
