@@ -17,7 +17,17 @@ public class CustomDevApplicationProfile extends CustomApplicationProfile {
     }
 
     @Override
-    public String getCouchDbUrl() {
-        return "http://mycouchdb:5984";
+    public String getDbName() {
+        return "dev_db";
+    }
+
+    @Override
+    public String getDbPassword() {
+        return "root";
+    }
+    
+    @Override
+    public boolean isShowSql() {
+        return true;
     }
 }

@@ -4,11 +4,13 @@ import java.util.Properties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import starter.config.MvcConfig;
 
+@Configuration//need for correct proxy configuration class
 @ComponentScan({"template.profile", "template.controller", "template.service", "template.fixture"})
 public class CustomMvcConfig extends MvcConfig {
     @Bean

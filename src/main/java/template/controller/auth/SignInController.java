@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import starter.model.AbstractProfile;
-import starter.security.ProfileService;
 import starter.security.SecurityService;
+import starter.service.ProfileService;
 import template.model.SigninForm;
 
 @Controller

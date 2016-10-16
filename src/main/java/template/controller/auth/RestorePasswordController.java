@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import starter.email.EmailService;
 import starter.model.AbstractProfile;
-import starter.security.ProfileService;
 import starter.security.SecurityService;
+import starter.service.ProfileService;
 import template.model.RestorePasswordForm;
 import template.service.EmailSignInMessageGenerator;
 
@@ -41,7 +41,7 @@ public class RestorePasswordController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String restore(@ModelAttribute("form") @Valid RestorePasswordForm form, BindingResult result) {
+    String restore(@ModelAttribute("form") @Valid RestorePasswordForm form, BindingResult result) {
         if (result.hasErrors()) return "/auth/restore";
 
         AbstractProfile profile = profileService.getById(form.getEmail());
@@ -56,7 +56,7 @@ public class RestorePasswordController {
 
         profile.setPassword(passwordEncoder.encode(newDecryptedPassword));
 
-        profileService.saveOrUpdate(profile);
+        profileService.update(profile);
 
         emailService.sendEmailAsync(generator.generate(profile, newDecryptedPassword));
 

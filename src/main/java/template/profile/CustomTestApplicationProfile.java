@@ -7,7 +7,17 @@ import org.springframework.stereotype.Component;
 @Profile("test")
 public class CustomTestApplicationProfile extends CustomProdApplicationProfile {
     @Override
-    public String getCouchDbUrl() {
-        return System.getenv("couchdb_url");
+    public String getDbUrl() {
+        return "jdbc:mysql://app_db:3306";
+    }
+    
+    @Override
+    public String getDbName() {
+        return "test_db";
+    }
+
+    @Override
+    public String getDbPassword() {
+        return System.getenv("db_password");
     }
 }

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import starter.model.AbstractProfile;
-import starter.security.ProfileService;
 import starter.security.SecurityService;
+import starter.service.ProfileService;
 
 @Controller
 @RequestMapping("/auth/email")
@@ -25,7 +25,7 @@ public class EmailSigninController {
     private SecurityService securityService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String signin(@RequestParam String uuid, HttpServletRequest request, HttpServletResponse response) {
+    String signin(@RequestParam String uuid, HttpServletRequest request, HttpServletResponse response) {
         AbstractProfile profile = profileService.getByConfirmUuid(uuid);
 
         if (profile == null) {
@@ -36,7 +36,7 @@ public class EmailSigninController {
 
         profile.setConfirmed(true); //если аккаунт не подтвержден
 
-        profileService.saveOrUpdate(profile);
+        profileService.update(profile);
 
         securityService.auth(profile, request, response, true);
 

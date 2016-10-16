@@ -3,10 +3,35 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>template</groupId>
   <artifactId>starter-template</artifactId>
-  <packaging>docker</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>2.10</version>
+      </extension>
+    </extensions>
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/init_db</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/init_db</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.7</version>
+      </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
@@ -91,8 +116,7 @@
       <plugin>
         <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
-        <version>0.15.9</version>
-        <extensions>true</extensions>
+        <version>${version.docker-plugin}</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -100,71 +124,162 @@
               <goal>build</goal>
             </goals>
           </execution>
+          <execution>
+            <id>docker_start</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>docker_stop</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
         </executions>
         <configuration>
-          <authConfig>
-            <serverId>hub.docker.com</serverId>
-          </authConfig>
           <dockerHost>${dockerHost}</dockerHost>
           <showLogs>true</showLogs>
+          <removeVolumes>true</removeVolumes>
           <images>
             <image>
-              <alias>couchdb</alias>
-              <name>couchdb</name>
+              <alias>app_db</alias>
+              <name>db:latest</name>
               <run>
                 <ports>
-                  <port>${couchdb.port}:5984</port>
+                  <port>${app_db.port}:3306</port>
                 </ports>
                 <wait>
-                  <log>Apache CouchDB has started</log>
+                  <time>60000</time>
+                  <tcp>
+                    <ports>
+                      <port>3306</port>
+                    </ports>
+                  </tcp>
                 </wait>
               </run>
             </image>
             <image>
-              <alias>service</alias>
-              <name>${repoUser}/${project.artifactId}:${tagName}</name>
+              <alias>test_db</alias>
+              <name>db:latest</name>
+              <run>
+                <ports>
+                  <port>${test_db.port}:3306</port>
+                </ports>
+                <wait>
+                  <time>60000</time>
+                  <tcp>
+                    <ports>
+                      <port>3306</port>
+                    </ports>
+                  </tcp>
+                </wait>
+              </run>
+            </image>
+            <image>
+              <alias>web</alias>
+              <name>${docker.repo.user}/web:${tagName}</name>
               <build>
-                <from>java</from>
+                <from>openjdk:8</from>
+                <nocache>true</nocache>
+                <workdir>${docker.webapp.workdir}</workdir>
                 <assembly>
-                  <basedir>${workdir}</basedir>
+                  <basedir>${docker.webapp.workdir}</basedir>
                   <descriptorRef>artifact</descriptorRef>
                 </assembly>
-                <workdir>${workdir}</workdir>
                 <cmd>
-                  <shell>java -jar ${workdir}/${project.build.finalName}.${project.packaging}</shell>
+                  <shell>java -jar ${project.build.finalName}.${project.packaging}</shell>
                 </cmd>
+                <ports>
+                  <port>8080</port>
+                </ports>
               </build>
               <run>
                 <env>
+                  <LANG>en_US.UTF-8</LANG>
                   <spring_profiles_active>test</spring_profiles_active>
-                  <couchdb_url>http://${docker.container.couchdb.ip}:5984</couchdb_url>
+                  <db_password>${db.password}</db_password>
                 </env>
                 <ports>
-                  <port>${undertow.host}:${undertow.port}:8080</port>
+                  <port>${web.host}:${web.port}:8080</port>
                 </ports>
                 <wait>
                   <time>60000</time>
                   <http>
-                    <url>http://${undertow.host}:${undertow.port}</url>
+                    <url>http://${web.host}:${web.port}</url>
                     <method>GET</method>
                     <status>200</status>
                   </http>
                 </wait>
+                <links>
+                  <link>app_db</link>
+                </links>
               </run>
             </image>
             <image>
               <alias>selenium</alias>
-              <name>selenium/standalone-chrome</name>
+              <name>selenium/standalone-chrome-debug</name>
               <run>
                 <ports>
                   <port>${selenium.port}:4444</port>
+                  <port>${selenium.vnc.port}:5900</port>
                 </ports>
                 <wait>
                   <log>Selenium Server is up and running</log>
                 </wait>
+                <links>
+                  <link>web</link>
+                </links>
               </run>
             </image>
           </images>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>4.0.3</version>
+        <executions>
+          <execution>
+            <id>app_db_migration</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>migrate</goal>
+            </goals>
+            <configuration>
+              <user>root</user>
+              <password>${db.password}</password>
+              <url>jdbc:mysql://${docker.host.address}:${app_db.port}/test_db</url>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test_db_migration</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>migrate</goal>
+            </goals>
+            <configuration>
+              <user>root</user>
+              <password>${db.password}</password>
+              <url>jdbc:mysql://${docker.host.address}:${test_db.port}/test_db</url>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${version.mysql-connector}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <cleanDisabled>true</cleanDisabled>
+          <baselineOnMigrate>true</baselineOnMigrate>
+          <locations>
+            <location>filesystem:migrations</location>
+          </locations>
         </configuration>
       </plugin>
       <plugin>
@@ -192,10 +307,12 @@
             <include>integration/**</include>
           </includes>
           <systemPropertyVariables>
-            <undertow.url>http://${docker.host.address}:${undertow.port}</undertow.url>
+            <test.automated>true</test.automated>
+            <web.url>http://${docker.host.address}:${web.port}</web.url>
             <selenium.url>http://${docker.host.address}:${selenium.port}/wd/hub</selenium.url>
-            <couchdb.url>http://${docker.host.address}:${couchdb.port}</couchdb.url>
-            <undertow.internalUrl>http://${docker.container.service.ip}:8080</undertow.internalUrl>
+            <selenium.vnc>${docker.host.address}:${selenium.vnc.port}</selenium.vnc>
+            <db.url>http://${docker.host.address}:${test_db.port}</db.url>
+            <db.password>${db.password}</db.password>
           </systemPropertyVariables>
         </configuration>
       </plugin>
@@ -205,7 +322,7 @@
         <version>3.0.4</version>
         <executions>
           <execution>
-            <phase>test</phase>
+            <phase>test-compile</phase>
             <goals>
               <goal>check</goal>
             </goals>
@@ -215,6 +332,13 @@
           <effort>Max</effort>
           <threshold>Low</threshold>
           <maxRank>20</maxRank>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+        <configuration>
+          <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>
@@ -234,36 +358,48 @@
       </properties>
     </profile>
     <profile>
-      <id>man4j</id>
-      <properties>
-        <couchdb.port>7777</couchdb.port>
-      </properties>
-    </profile>
-    <profile>
-      <id>run-deps</id>
+      <id>prepare-db-image</id>
       <build>
         <plugins>
           <plugin>
             <groupId>io.fabric8</groupId>
             <artifactId>docker-maven-plugin</artifactId>
-            <version>0.15.9</version>
-            <extensions>true</extensions>
+            <version>${version.docker-plugin}</version>
             <configuration>
               <dockerHost>${dockerHost}</dockerHost>
               <showLogs>true</showLogs>
               <removeVolumes>true</removeVolumes>
               <images>
                 <image>
-                  <alias>couchdb</alias>
-                  <name>couchdb</name>
-                  <run>
-                    <ports>
-                      <port>${couchdb.port}:5984</port>
-                    </ports>
-                    <wait>
-                      <log>Apache CouchDB has started</log>
-                    </wait>
-                  </run>
+                  <alias>db</alias>
+                  <name>db:latest</name>
+                  <build>
+                    <from>mysql:5.7</from>
+                    <nocache>true</nocache>
+                    <assembly>
+                      <basedir>/tmp</basedir>
+                      <mode>tar</mode>
+                      <inline>
+                        <files>
+                          <file>
+                            <source>${project.build.outputDirectory}/docker/init_db</source>
+                            <fileMode>0777</fileMode>
+                          </file>
+                          <file>
+                            <source>${project.build.outputDirectory}/docker/run_db</source>
+                            <fileMode>0777</fileMode>
+                          </file>
+                          <file>
+                            <source>${user.home}/dump.sql</source>
+                          </file>
+                        </files>
+                      </inline>
+                    </assembly>
+                    <runCmds>
+                      <runCmd>/tmp/init_db</runCmd>
+                    </runCmds>
+                    <entryPoint>/tmp/run_db</entryPoint>
+                  </build>
                 </image>
               </images>
             </configuration>
@@ -371,16 +507,19 @@
     </dependency>
   </dependencies>
   <properties>
+    <version.mysql-connector>5.1.40</version.mysql-connector>
+    <docker.repo.user>man4j</docker.repo.user>
     <version.security>4.1.1.RELEASE</version.security>
+    <docker.webapp.workdir>/opt/webapp</docker.webapp.workdir>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <repoUser>man4j</repoUser>
     <version.junit>4.12</version.junit>
     <version.spring>4.3.1.RELEASE</version.spring>
+    <db.password>${docker.db.password}</db.password>
+    <version.docker-plugin>0.15.9</version.docker-plugin>
     <version.mockito>2.0.2-beta</version.mockito>
     <maven.compiler.source>1.8</maven.compiler.source>
-    <workdir>/opt/${project.artifactId}</workdir>
   </properties>
 </project>
 

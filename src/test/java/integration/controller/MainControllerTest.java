@@ -1,4 +1,4 @@
-package template.controller;
+package integration.controller;
 
 import javax.servlet.http.Cookie;
 
@@ -10,7 +10,9 @@ import org.springframework.security.web.authentication.rememberme.AbstractRememb
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-public class MainControllerTest extends ControllerIntegrationTestsSupport {
+import support.SpringMvcTestSupport;
+
+public class MainControllerTest extends SpringMvcTestSupport {
     @Test
     public void shouldReturnSecurityRedirect() throws Exception {
         getMockMvc().perform(MockMvcRequestBuilders.get("/")).andExpect(MockMvcResultMatchers.redirectedUrlPattern("**/auth/signin"));
@@ -36,7 +38,7 @@ public class MainControllerTest extends ControllerIntegrationTestsSupport {
         
         Assert.assertNotNull(rememberMeCookie);
 
-        System.out.println(getMockMvc().perform(MockMvcRequestBuilders.get("/").cookie(rememberMeCookie)).andExpect(SecurityMockMvcResultMatchers.authenticated()));
+        getMockMvc().perform(MockMvcRequestBuilders.get("/").cookie(rememberMeCookie)).andExpect(SecurityMockMvcResultMatchers.authenticated());
     }
     
     @Test

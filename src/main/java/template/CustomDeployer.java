@@ -7,7 +7,8 @@ public class CustomDeployer extends Deployer {
     protected void configureContextParams() {
         super.configureContextParams();
         
-        deploymentInfo.addInitParameter("contextConfigLocation", "template.config.CustomMvcConfig,"
+        deploymentInfo.addInitParameter("contextConfigLocation", "template.config.CustomDbConfig,"
+                                                               + "template.config.CustomMvcConfig,"
                                                                + "template.config.CustomSecurityConfig,"
                                                                + "template.config.CustomSocialConfig");
     }

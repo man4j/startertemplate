@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import starter.email.EmailService;
 import starter.model.AbstractProfile;
-import starter.security.ProfileService;
+import starter.service.ProfileService;
 import template.model.SignUpForm;
 import template.service.EmailSignInMessageGenerator;
 
@@ -32,12 +32,12 @@ public class SignUpController {
     private PasswordEncoder passwordEncoder;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String get(@SuppressWarnings("unused") @ModelAttribute("form") SignUpForm form) {
+    String get(@SuppressWarnings("unused") @ModelAttribute("form") SignUpForm form) {
         return "/auth/signup";
     } 
 
     @RequestMapping(method = RequestMethod.POST)
-    public String signup(@ModelAttribute("form") @Valid SignUpForm form, BindingResult result) {
+    String signup(@ModelAttribute("form") @Valid SignUpForm form, BindingResult result) {
         if (result.hasErrors()) return "/auth/signup";
         
         if (profileService.getById(form.getEmail()) != null) {
@@ -46,7 +46,7 @@ public class SignUpController {
             return "/auth/signup";
         }
 
-        AbstractProfile profile = profileService.createProfile(form.getEmail(), form.getEmail(), passwordEncoder.encode(form.getPassword()), false);
+        AbstractProfile profile = profileService.create(form.getEmail(), form.getEmail(), passwordEncoder.encode(form.getPassword()), false);
 
         emailService.sendEmailAsync(generator.generate(profile, form.getPassword()));
 

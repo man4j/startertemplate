@@ -17,7 +17,12 @@ public class CustomProdApplicationProfile extends CustomApplicationProfile {
     }
 
     @Override
-    public String getCouchDbUrl() {
-        return "http://mycouchdb:5984";
+    public String getDbName() {
+        return "prod_db";
+    }
+
+    @Override
+    public String getDbPassword() {
+        return null;
     }
 }

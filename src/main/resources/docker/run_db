@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+set -x
+
+# first, if the /var/lib/mysql directory is empty, unpack it from our predefined db
+[ "$(ls -A /var/lib/mysql)" ] && echo "Running with existing database in /var/lib/mysql" || ( echo 'Populate initial db'; tar xpzvf default_mysql.tar.gz )
+
+mysqld --user=root --lower_case_table_names=1 --sql-mode=NO_ENGINE_SUBSTITUTION
+ 
