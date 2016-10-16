@@ -67,7 +67,7 @@
               <images>
                 <image>
                   <alias>db</alias>
-                  <name>db:latest</name>
+                  <name>${docker.repo.user}/db:latest</name>
                   <build>
                     <from>mysql:5.7</from>
                     <nocache>true</nocache>
@@ -321,7 +321,7 @@
           <images>
             <image>
               <alias>app_db</alias>
-              <name>db:latest</name>
+              <name>${docker.repo.user}/db:latest</name>
               <run>
                 <ports>
                   <port>${app_db.port}:3306</port>
@@ -335,7 +335,7 @@
             
             <image>
               <alias>test_db</alias>
-              <name>db:latest</name>
+              <name>${docker.repo.user}/db:latest</name>
               <run>
                 <ports>
                   <port>${test_db.port}:3306</port>
