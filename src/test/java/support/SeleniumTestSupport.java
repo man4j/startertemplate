@@ -21,7 +21,7 @@ public class SeleniumTestSupport {
     @BeforeClass
     public static void before() throws IOException {
         if (SELENIUM_URL != null) {
-            driver = new RemoteWebDriver(new URL(SELENIUM_URL), DesiredCapabilities.chrome());
+            driver = new RemoteWebDriver(new URL(SELENIUM_URL), DesiredCapabilities.firefox());
             
             System.out.println("Selenium vnc addr: " + SELENIUM_VNC);
         } else {
