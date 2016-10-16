@@ -18,7 +18,11 @@ public class CustomIntegrationApplicationProfile extends CustomApplicationProfil
     
     @Override
     public String getDbUrl() {
-        return isAutomated() ? System.getProperty("db.url") : super.getDbUrl();
+        String dbUrl =  isAutomated() ? System.getProperty("db.url") : super.getDbUrl();
+        
+        System.out.println("Database URL: " + dbUrl);
+        
+        return dbUrl;
     }
 
     @Override
@@ -28,7 +32,11 @@ public class CustomIntegrationApplicationProfile extends CustomApplicationProfil
 
     @Override
     public String getDbPassword() {
-        return isAutomated() ?  System.getProperty("db.password") : "root";
+        String password = isAutomated() ?  System.getProperty("db.password") : "root";
+        
+        System.out.println("Database password: " + password);
+        
+        return password;
     }
     
     @Override
