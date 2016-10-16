@@ -390,7 +390,7 @@
             
             <image>
               <alias>selenium</alias>
-              <name>selenium/standalone-chrome-debug</name>
+              <name>selenium/standalone-firefox-debug</name>
               <run>
                 <ports>
                   <port>${selenium.port}:4444</port>
