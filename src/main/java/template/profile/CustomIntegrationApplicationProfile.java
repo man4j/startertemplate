@@ -7,40 +7,32 @@ import org.springframework.stereotype.Component;
 @Profile("integration")
 public class CustomIntegrationApplicationProfile extends CustomApplicationProfile {
     @Override
-    public int getMessagesCacheInterval() {
-        return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public boolean isTemplateCacheEnabled() {
-        return true;
+    public String getDbUser() {
+        String dbUser =  System.getProperty("db.user") != null ? System.getProperty("db.user") : super.getDbUser();
+        
+        System.out.println("Database user for Spring integration tests: " + dbUser);
+        
+        return dbUser;
     }
     
     @Override
     public String getDbUrl() {
-        String url =  isAutomated() ? System.getProperty("db.url") : super.getDbUrl();
+        String dbUrl =  System.getProperty("db.url") != null ? System.getProperty("db.url") : super.getDbUrl();
         
-        System.out.println("Database URL for Spring integration tests: " + url);
+        System.out.println("Database URL for Spring integration tests: " + dbUrl);
         
-        return url;
-    }
-
-    @Override
-    public String getDbName() {
-        return isAutomated() ? "test_db" : "dev_db";
+        return dbUrl;
     }
 
     @Override
     public String getDbPassword() {
-        return isAutomated() ?  System.getProperty("db.password") : "root";
+        String dbPassword = System.getProperty("db.password") != null ? System.getProperty("db.password") : super.getDbPassword();
+        
+        return dbPassword;
     }
     
     @Override
     public boolean isShowSql() {
-        return !isAutomated();
-    }
-    
-    private boolean isAutomated() {
-        return Boolean.getBoolean("test.automated");
+        return true;
     }
 }

@@ -8,12 +8,7 @@ import org.springframework.stereotype.Component;
 public class CustomTestApplicationProfile extends CustomProdApplicationProfile {
     @Override
     public String getDbUrl() {
-        return "jdbc:mysql://app_db:3306";
-    }
-    
-    @Override
-    public String getDbName() {
-        return "test_db";
+        return "jdbc:mysql://app_db:3306/test_db";
     }
 
     @Override

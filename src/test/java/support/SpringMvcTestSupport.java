@@ -12,8 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import starter.security.SecurityService;
-import starter.service.ProfileService;
 import template.config.CustomDbConfig;
 import template.config.CustomMvcConfig;
 import template.config.CustomSecurityConfig;
@@ -27,12 +25,6 @@ public class SpringMvcTestSupport {
     @Autowired
     private WebApplicationContext wac;
     
-    @Autowired
-    private SecurityService securityService;
-    
-    @Autowired
-    private ProfileService profileService;
-    
     private MockMvc mockMvc;
     
     @Before
@@ -44,14 +36,6 @@ public class SpringMvcTestSupport {
     
     public WebApplicationContext getWac() {
         return wac;
-    }
-    
-    public SecurityService getSecurityService() {
-        return securityService;
-    }
-    
-    public ProfileService getProfileService() {
-        return profileService;
     }
     
     public MockMvc getMockMvc() {
