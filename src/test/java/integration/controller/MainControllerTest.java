@@ -10,9 +10,9 @@ import org.springframework.security.web.authentication.rememberme.AbstractRememb
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import support.SpringMvcTestSupport;
+import support.SpringMvcTestContainersSupport;
 
-public class MainControllerTest extends SpringMvcTestSupport {
+public class MainControllerTest extends SpringMvcTestContainersSupport {
     @Test
     public void shouldReturnSecurityRedirect() throws Exception {
         getMockMvc().perform(MockMvcRequestBuilders.get("/")).andExpect(MockMvcResultMatchers.redirectedUrlPattern("**/auth/signin"));

@@ -8,12 +8,19 @@ import javax.script.ScriptException;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode;
 import org.testcontainers.containers.MySQLContainer;
 
 import template.CustomDeployer;
 
-public class RestTestSupport {
-    private static CustomDeployer deployer = new CustomDeployer();
+public class SeleniumTestContainersChromeSupport {
+    @SuppressWarnings("rawtypes")
+    private static BrowserWebDriverContainer chrome = new BrowserWebDriverContainer()
+        .withDesiredCapabilities(DesiredCapabilities.chrome())
+        .withRecordingMode(VncRecordingMode.SKIP, null);
     
     @SuppressWarnings("rawtypes")
     private static MySQLContainer mysql = new MySQLContainer() {
@@ -36,8 +43,24 @@ public class RestTestSupport {
         }
     };
     
+    private static String WEB_URL;
+    
+    private static CustomDeployer deployer = new CustomDeployer();
+    
     @BeforeClass
-    public static void before() throws SQLException, ScriptException, IOException {
+    public static void startContainer() throws SQLException, ScriptException, IOException, UnsupportedOperationException, InterruptedException {
+        chrome.start();
+        
+        String host;
+        
+        if (System.getenv("WEB_HOST") != null) {
+            host = System.getenv("WEB_HOST");
+        } else {
+            host = chrome.execInContainer("ip", "route", "show").getStdout().split(" ")[2];
+        }
+        
+        WEB_URL = "http://" + host + ":8080/";
+        
         mysql.start();
         
         try (java.sql.Connection conn = mysql.createConnection("")) {
@@ -55,11 +78,16 @@ public class RestTestSupport {
     
     @AfterClass
     public static void stopContainer() {
+        chrome.stop();
         deployer.undeploy();
         mysql.stop();
     }
     
+    public RemoteWebDriver getDriver() {
+        return chrome.getWebDriver();
+    }
+    
     public static String getWebURL() {
-        return "http://localhost:8080";
+        return WEB_URL;
     }
 }

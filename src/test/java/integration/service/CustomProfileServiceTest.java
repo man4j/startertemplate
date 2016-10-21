@@ -9,11 +9,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import support.SpringMvcTestSupport;
+import support.SpringMvcTestContainersSupport;
 import template.model.UserProfile;
 import template.service.CustomProfileService;
 
-public class CustomProfileServiceTest extends SpringMvcTestSupport {
+public class CustomProfileServiceTest extends SpringMvcTestContainersSupport {
     @Autowired
     private CustomProfileService customProfileService;
     

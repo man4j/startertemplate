@@ -42,7 +42,7 @@ public class SpringMvcTestContainersSupport {
     private WebApplicationContext wac;
 
     @SuppressWarnings("rawtypes")
-    public static MySQLContainer mysql = new MySQLContainer() {
+    private static MySQLContainer mysql = new MySQLContainer() {
         @Override
         public String getJdbcUrl() {
             return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";

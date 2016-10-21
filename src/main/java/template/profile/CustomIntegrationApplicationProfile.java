@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class CustomIntegrationApplicationProfile extends CustomApplicationProfile {
     @Override
     public String getDbUser() {
-        String dbUser =  System.getProperty("db.user") != null ? System.getProperty("db.user") : super.getDbUser();
+        String dbUser =  System.getProperty("db.user");
         
         System.out.println("Database user for Spring integration tests: " + dbUser);
         
@@ -17,7 +17,7 @@ public class CustomIntegrationApplicationProfile extends CustomApplicationProfil
     
     @Override
     public String getDbUrl() {
-        String dbUrl =  System.getProperty("db.url") != null ? System.getProperty("db.url") : super.getDbUrl();
+        String dbUrl =  System.getProperty("db.url");
         
         System.out.println("Database URL for Spring integration tests: " + dbUrl);
         
@@ -26,7 +26,7 @@ public class CustomIntegrationApplicationProfile extends CustomApplicationProfil
 
     @Override
     public String getDbPassword() {
-        String dbPassword = System.getProperty("db.password") != null ? System.getProperty("db.password") : super.getDbPassword();
+        String dbPassword = System.getProperty("db.password");
         
         return dbPassword;
     }
