@@ -18,37 +18,20 @@ import template.CustomDeployer;
 
 public class SeleniumTestContainersChromeSupport {
     @SuppressWarnings("rawtypes")
-    private static BrowserWebDriverContainer chrome = new BrowserWebDriverContainer()
-        .withDesiredCapabilities(DesiredCapabilities.chrome())
-        .withRecordingMode(VncRecordingMode.SKIP, null);
+    private static BrowserWebDriverContainer chrome;
     
     @SuppressWarnings("rawtypes")
-    private static MySQLContainer mysql = new MySQLContainer() {
-        @Override
-        public String getJdbcUrl() {
-            return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
-        }
-        
-        @Override
-        protected void configure() {
-            optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
-
-            addExposedPort(3306);
-            addEnv("MYSQL_DATABASE", "test_db");
-            addEnv("MYSQL_USER", "test");
-            addEnv("MYSQL_PASSWORD", "test");
-            addEnv("MYSQL_ROOT_PASSWORD", "test");
-            setCommand("mysqld");
-            setStartupAttempts(3);        
-        }
-    };
+    private static MySQLContainer mysql;
     
     private static String WEB_URL;
     
-    private static CustomDeployer deployer = new CustomDeployer();
+    private static CustomDeployer deployer;
     
+    @SuppressWarnings("rawtypes")
     @BeforeClass
     public static void startContainer() throws SQLException, ScriptException, IOException, UnsupportedOperationException, InterruptedException {
+        chrome = new BrowserWebDriverContainer().withDesiredCapabilities(DesiredCapabilities.chrome())
+                                                .withRecordingMode(VncRecordingMode.SKIP, null);
         chrome.start();
         
         String host;
@@ -61,6 +44,25 @@ public class SeleniumTestContainersChromeSupport {
         
         WEB_URL = "http://" + host + ":8080/";
         
+        mysql = new MySQLContainer() {
+            @Override
+            public String getJdbcUrl() {
+                return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
+            }
+            
+            @Override
+            protected void configure() {
+                optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
+
+                addExposedPort(3306);
+                addEnv("MYSQL_DATABASE", "test_db");
+                addEnv("MYSQL_USER", "test");
+                addEnv("MYSQL_PASSWORD", "test");
+                addEnv("MYSQL_ROOT_PASSWORD", "test");
+                setCommand("mysqld");
+                setStartupAttempts(3);        
+            }
+        };
         mysql.start();
         
         try (java.sql.Connection conn = mysql.createConnection("")) {
@@ -73,6 +75,7 @@ public class SeleniumTestContainersChromeSupport {
         
         System.setProperty("spring.profiles.active", "integration");
         
+        deployer = new CustomDeployer();
         deployer.deploy();
     }
     

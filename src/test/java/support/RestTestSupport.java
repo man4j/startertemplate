@@ -13,31 +13,34 @@ import org.testcontainers.containers.MySQLContainer;
 import template.CustomDeployer;
 
 public class RestTestSupport {
-    private static CustomDeployer deployer = new CustomDeployer();
+    private static CustomDeployer deployer;
     
     @SuppressWarnings("rawtypes")
-    private static MySQLContainer mysql = new MySQLContainer() {
-        @Override
-        public String getJdbcUrl() {
-            return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
-        }
-        
-        @Override
-        protected void configure() {
-            optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
-
-            addExposedPort(3306);
-            addEnv("MYSQL_DATABASE", "test_db");
-            addEnv("MYSQL_USER", "test");
-            addEnv("MYSQL_PASSWORD", "test");
-            addEnv("MYSQL_ROOT_PASSWORD", "test");
-            setCommand("mysqld");
-            setStartupAttempts(3);        
-        }
-    };
+    private static MySQLContainer mysql;
     
+    @SuppressWarnings("rawtypes")
     @BeforeClass
     public static void before() throws SQLException, ScriptException, IOException {
+        mysql = new MySQLContainer() {
+            @Override
+            public String getJdbcUrl() {
+                return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
+            }
+            
+            @Override
+            protected void configure() {
+                optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
+
+                addExposedPort(3306);
+                addEnv("MYSQL_DATABASE", "test_db");
+                addEnv("MYSQL_USER", "test");
+                addEnv("MYSQL_PASSWORD", "test");
+                addEnv("MYSQL_ROOT_PASSWORD", "test");
+                setCommand("mysqld");
+                setStartupAttempts(3);        
+            }
+        };
+        
         mysql.start();
         
         try (java.sql.Connection conn = mysql.createConnection("")) {
@@ -50,6 +53,7 @@ public class RestTestSupport {
         
         System.setProperty("spring.profiles.active", "integration");
         
+        deployer = new CustomDeployer();
         deployer.deploy();
     }
     

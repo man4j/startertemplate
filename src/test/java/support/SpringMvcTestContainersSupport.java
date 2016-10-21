@@ -12,6 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.HierarchyMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,35 +39,39 @@ import template.config.CustomSocialConfig;
 @WebAppConfiguration
 @ContextConfiguration(classes = {CustomDbConfig.class, CustomMvcConfig.class, CustomSecurityConfig.class, CustomSocialConfig.class})
 @ActiveProfiles("integration")
+@DirtiesContext(hierarchyMode = HierarchyMode.CURRENT_LEVEL)
 public class SpringMvcTestContainersSupport {
     @Autowired
     private WebApplicationContext wac;
 
     @SuppressWarnings("rawtypes")
-    private static MySQLContainer mysql = new MySQLContainer() {
-        @Override
-        public String getJdbcUrl() {
-            return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
-        }
-        
-        @Override
-        protected void configure() {
-            optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
-
-            addExposedPort(3306);
-            addEnv("MYSQL_DATABASE", "test_db");
-            addEnv("MYSQL_USER", "test");
-            addEnv("MYSQL_PASSWORD", "test");
-            addEnv("MYSQL_ROOT_PASSWORD", "test");
-            setCommand("mysqld");
-            setStartupAttempts(3);        
-        }
-    };
+    private static MySQLContainer mysql;
     
     private MockMvc mockMvc;
     
+    @SuppressWarnings("rawtypes")
     @BeforeClass
     public static void startContainer() throws SQLException, ScriptException, IOException {
+        mysql = new MySQLContainer() {
+            @Override
+            public String getJdbcUrl() {
+                return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
+            }
+            
+            @Override
+            protected void configure() {
+                optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
+
+                addExposedPort(3306);
+                addEnv("MYSQL_DATABASE", "test_db");
+                addEnv("MYSQL_USER", "test");
+                addEnv("MYSQL_PASSWORD", "test");
+                addEnv("MYSQL_ROOT_PASSWORD", "test");
+                setCommand("mysqld");
+                setStartupAttempts(3);        
+            }
+        };
+        
         mysql.start();
         
         try (java.sql.Connection conn = mysql.createConnection("")) {
