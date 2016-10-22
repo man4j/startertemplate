@@ -6,9 +6,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import support.SeleniumTestContainersChromeSupport;
+import support.SeleniumTestContainersSupport;
 
-public class SeleniumIntegrationTest extends SeleniumTestContainersChromeSupport {
+public class SeleniumIntegrationTest extends SeleniumTestContainersSupport {
     @Test
     public void shouldWork() {
         String signInUrl = getWebURL() + "/auth/signin";

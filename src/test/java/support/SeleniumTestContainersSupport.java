@@ -16,9 +16,9 @@ import org.testcontainers.containers.MySQLContainer;
 
 import template.CustomDeployer;
 
-public class SeleniumTestContainersChromeSupport {
+public class SeleniumTestContainersSupport {
     @SuppressWarnings("rawtypes")
-    private static BrowserWebDriverContainer chrome;
+    private static BrowserWebDriverContainer browser;
     
     @SuppressWarnings("rawtypes")
     private static MySQLContainer mysql;
@@ -30,16 +30,16 @@ public class SeleniumTestContainersChromeSupport {
     @SuppressWarnings("rawtypes")
     @BeforeClass
     public static void startContainer() throws SQLException, ScriptException, IOException, UnsupportedOperationException, InterruptedException {
-        chrome = new BrowserWebDriverContainer().withDesiredCapabilities(DesiredCapabilities.chrome())
+        browser = new BrowserWebDriverContainer().withDesiredCapabilities(DesiredCapabilities.firefox())
                                                 .withRecordingMode(VncRecordingMode.SKIP, null);
-        chrome.start();
+        browser.start();
         
         String host;
         
         if (System.getenv("WEB_HOST") != null) {
             host = System.getenv("WEB_HOST");
         } else {
-            host = chrome.execInContainer("ip", "route", "show").getStdout().split(" ")[2];
+            host = browser.execInContainer("ip", "route", "show").getStdout().split(" ")[2];
         }
         
         WEB_URL = "http://" + host + ":8080/";
@@ -81,13 +81,13 @@ public class SeleniumTestContainersChromeSupport {
     
     @AfterClass
     public static void stopContainer() {
-        chrome.stop();
+        browser.stop();
         deployer.undeploy();
         mysql.stop();
     }
     
     public RemoteWebDriver getDriver() {
-        return chrome.getWebDriver();
+        return browser.getWebDriver();
     }
     
     public static String getWebURL() {
