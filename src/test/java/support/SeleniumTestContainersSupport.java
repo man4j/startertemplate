@@ -39,7 +39,7 @@ public class SeleniumTestContainersSupport {
         if (System.getenv("WEB_HOST") != null) {
             host = System.getenv("WEB_HOST");
         } else {
-            host = "172.17.0.1";
+            host = "172.17.42.1";
         }
         
         WEB_URL = "http://" + host + ":8080/";
