@@ -60,6 +60,13 @@
     </dependency>
     
     <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>4.0.3</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${version.junit}</version>
@@ -108,12 +115,6 @@
     </extensions>
   
     <plugins>
-      <plugin><!-- enable resource plugin without filtering bug -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.7</version>
-      </plugin>
-      
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
@@ -205,7 +206,7 @@
           <cleanDisabled>true</cleanDisabled>
           <baselineOnMigrate>true</baselineOnMigrate>
           <locations>
-            <location>filesystem:migrations</location>
+            <location>classpath:migrations</location>
           </locations>
         </configuration>
         <executions>

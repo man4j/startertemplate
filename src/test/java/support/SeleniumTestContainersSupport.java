@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import javax.script.ScriptException;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -16,7 +15,7 @@ import org.testcontainers.containers.MySQLContainer;
 
 import template.CustomDeployer;
 
-public class SeleniumTestContainersSupport {
+public class SeleniumTestContainersSupport extends TestContainersSupport {
     @SuppressWarnings("rawtypes")
     private static BrowserWebDriverContainer browser;
     
@@ -27,11 +26,13 @@ public class SeleniumTestContainersSupport {
     
     private static CustomDeployer deployer;
     
+    private static final String DOCKER_HOST_IP = "172.17.42.1";
+    
     @SuppressWarnings("rawtypes")
     @BeforeClass
-    public static void startContainer() throws SQLException, ScriptException, IOException, UnsupportedOperationException, InterruptedException {
+    public static void startContainer() throws SQLException, ScriptException, IOException, UnsupportedOperationException {
         browser = new BrowserWebDriverContainer().withDesiredCapabilities(DesiredCapabilities.firefox())
-                                                .withRecordingMode(VncRecordingMode.SKIP, null);
+                                                 .withRecordingMode(VncRecordingMode.SKIP, null);
         browser.start();
         
         String host;
@@ -39,39 +40,12 @@ public class SeleniumTestContainersSupport {
         if (System.getenv("WEB_HOST") != null) {
             host = System.getenv("WEB_HOST");
         } else {
-            host = "172.17.42.1";
+            host = DOCKER_HOST_IP;
         }
         
         WEB_URL = "http://" + host + ":8080/";
         
-        mysql = new MySQLContainer() {
-            @Override
-            public String getJdbcUrl() {
-                return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
-            }
-            
-            @Override
-            protected void configure() {
-                optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
-
-                addExposedPort(3306);
-                addEnv("MYSQL_DATABASE", "test_db");
-                addEnv("MYSQL_USER", "test");
-                addEnv("MYSQL_PASSWORD", "test");
-                addEnv("MYSQL_ROOT_PASSWORD", "test");
-                setCommand("mysqld");
-                setStartupAttempts(3);        
-            }
-        };
-        mysql.start();
-        
-        try (java.sql.Connection conn = mysql.createConnection("")) {
-            org.testcontainers.jdbc.ext.ScriptUtils.executeSqlScript(conn, "", IOUtils.toString(SpringMvcTestContainersSupport.class.getResourceAsStream("/dump.sql")));
-        }
-        
-        System.setProperty("db.url", mysql.getJdbcUrl());
-        System.setProperty("db.user", mysql.getUsername());
-        System.setProperty("db.password", mysql.getPassword());
+        mysql = createMySQLContainer();
         
         System.setProperty("spring.profiles.active", "integration");
         

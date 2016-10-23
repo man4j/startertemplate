@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import javax.script.ScriptException;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -40,7 +39,7 @@ import template.config.CustomSocialConfig;
 @ContextConfiguration(classes = {CustomDbConfig.class, CustomMvcConfig.class, CustomSecurityConfig.class, CustomSocialConfig.class})
 @ActiveProfiles("integration")
 @DirtiesContext(hierarchyMode = HierarchyMode.CURRENT_LEVEL)
-public class SpringMvcTestContainersSupport {
+public class SpringMvcTestContainersSupport extends TestContainersSupport {
     @Autowired
     private WebApplicationContext wac;
 
@@ -49,38 +48,9 @@ public class SpringMvcTestContainersSupport {
     
     private MockMvc mockMvc;
     
-    @SuppressWarnings("rawtypes")
     @BeforeClass
     public static void startContainer() throws SQLException, ScriptException, IOException {
-        mysql = new MySQLContainer() {
-            @Override
-            public String getJdbcUrl() {
-                return "jdbc:mysql://" + getContainerIpAddress() + ":" + getMappedPort(3306) + "/test_db";
-            }
-            
-            @Override
-            protected void configure() {
-                optionallyMapResourceParameterAsVolume("TC_MY_CNF", "/etc/mysql/conf.d");
-
-                addExposedPort(3306);
-                addEnv("MYSQL_DATABASE", "test_db");
-                addEnv("MYSQL_USER", "test");
-                addEnv("MYSQL_PASSWORD", "test");
-                addEnv("MYSQL_ROOT_PASSWORD", "test");
-                setCommand("mysqld");
-                setStartupAttempts(3);        
-            }
-        };
-        
-        mysql.start();
-        
-        try (java.sql.Connection conn = mysql.createConnection("")) {
-            org.testcontainers.jdbc.ext.ScriptUtils.executeSqlScript(conn, "", IOUtils.toString(SpringMvcTestContainersSupport.class.getResourceAsStream("/dump.sql")));
-        }
-        
-        System.setProperty("db.url", mysql.getJdbcUrl());
-        System.setProperty("db.user", mysql.getUsername());
-        System.setProperty("db.password", mysql.getPassword());
+        mysql = createMySQLContainer();
     }
 
     @AfterClass

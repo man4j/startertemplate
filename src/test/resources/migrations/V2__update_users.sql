@@ -1,0 +1,1 @@
+﻿ALTER TABLE `users` ADD COLUMN `test` INT NULL AFTER `confirmed`; 
