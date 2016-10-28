@@ -26,7 +26,7 @@ public class SeleniumTestContainersSupport extends TestContainersSupport {
     
     private static CustomDeployer deployer;
     
-    private static final String DOCKER_HOST_IP = "172.17.42.1";
+    private static final String DOCKER_HOST_IP = "172.17.0.1";
     
     @SuppressWarnings("rawtypes")
     @BeforeClass
@@ -44,6 +44,8 @@ public class SeleniumTestContainersSupport extends TestContainersSupport {
         }
         
         WEB_URL = "http://" + host + ":8080/";
+        
+        System.out.println("Web Application URL: " + WEB_URL);
         
         mysql = createMySQLContainer();
         
