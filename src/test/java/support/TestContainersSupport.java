@@ -1,17 +1,11 @@
 package support;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.script.ScriptException;
-
-import org.apache.commons.io.IOUtils;
 import org.flywaydb.core.Flyway;
 import org.testcontainers.containers.MySQLContainer;
 
 public class TestContainersSupport {
     @SuppressWarnings("rawtypes")
-    public static MySQLContainer createMySQLContainer() throws SQLException, ScriptException, IOException {
+    public static MySQLContainer createMySQLContainer() {
         MySQLContainer mysql = new MySQLContainer() {
             @Override
             public String getJdbcUrl() {
@@ -34,19 +28,19 @@ public class TestContainersSupport {
         
         mysql.start();
         
-        importDump(mysql);
+//        importDump(mysql);
         migrate(mysql);
         setSystemVars(mysql);
         
         return mysql;
     }
 
-    @SuppressWarnings("rawtypes")
-    private static void importDump(MySQLContainer mysql) throws ScriptException, IOException, SQLException {
-        try (java.sql.Connection conn = mysql.createConnection("")) {
-            org.testcontainers.jdbc.ext.ScriptUtils.executeSqlScript(conn, "", IOUtils.toString(SpringMvcTestContainersSupport.class.getResourceAsStream("/dump.sql")));
-        }
-    }
+//    @SuppressWarnings("rawtypes")
+//    private static void importDump(MySQLContainer mysql) throws ScriptException, IOException, SQLException {
+//        try (java.sql.Connection conn = mysql.createConnection("")) {
+//            org.testcontainers.jdbc.ext.ScriptUtils.executeSqlScript(conn, "", IOUtils.toString(SpringMvcTestContainersSupport.class.getResourceAsStream("/dump.sql")));
+//        }
+//    }
 
     @SuppressWarnings("rawtypes")
     private static void setSystemVars(MySQLContainer mysql) {
@@ -58,7 +52,6 @@ public class TestContainersSupport {
     @SuppressWarnings("rawtypes")
     private static void migrate(MySQLContainer mysql) {
         Flyway fw = new Flyway();
-        fw.setBaselineOnMigrate(true);
         fw.setDataSource(mysql.getJdbcUrl(), mysql.getUsername(), mysql.getPassword());
         fw.setLocations("classpath:migrations");
         fw.migrate();

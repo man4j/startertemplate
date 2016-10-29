@@ -18,17 +18,8 @@
     </encoder>
   </appender>
 
-  <if condition='p("spring.profiles.active").equals("")'>
-    <then>
-      <root level="info">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
-      </root>
-    </then>
-    <else>
-      <root level="info">
-        <appender-ref ref="STDOUT" />
-      </root>
-    </else>
-  </if>  
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
 </configuration>

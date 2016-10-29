@@ -203,8 +203,6 @@
         <artifactId>flyway-maven-plugin</artifactId>
         <version>4.0.3</version>
         <configuration>
-          <cleanDisabled>true</cleanDisabled>
-          <baselineOnMigrate>true</baselineOnMigrate>
           <locations>
             <location>classpath:migrations</location>
           </locations>
