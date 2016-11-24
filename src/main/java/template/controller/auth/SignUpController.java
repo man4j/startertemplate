@@ -40,13 +40,13 @@ public class SignUpController {
     String signup(@ModelAttribute("form") @Valid SignUpForm form, BindingResult result) {
         if (result.hasErrors()) return "/auth/signup";
         
-        if (profileService.getById(form.getEmail()) != null) {
+        if (profileService.getByEmail(form.getEmail()) != null) {
             result.rejectValue("email", "email.notUnique", "Данный E-mail уже зарегистрирован");
             
             return "/auth/signup";
         }
 
-        AbstractProfile profile = profileService.create(form.getEmail(), form.getEmail(), passwordEncoder.encode(form.getPassword()), false);
+        AbstractProfile profile = profileService.create(form.getEmail(), passwordEncoder.encode(form.getPassword()), false);
 
         emailService.sendEmailAsync(generator.generate(profile, form.getPassword()));
 

@@ -5,9 +5,12 @@
 
   <body>    
     Для получения доступа к Вашему аккаунту перейдите пожалуйста по ссылке:
-    <a href="${baseUrl}/auth/email?uuid=${uuid?url}">${baseUrl}/auth/email?uuid=${uuid}</a>
+    <a href="${baseUrl}/auth/email?uuid=${uuid?url}<#if socialUserId??>&socialUserId=${socialUserId}</#if>">${baseUrl}/auth/email?uuid=${uuid?url}<#if socialUserId??>&socialUserId=${socialUserId}</#if></a>
     <br />
-    Ваш пароль:
-    <b>${password}</b>
+    
+    <#if !socialUserId??>
+      Ваш пароль:
+      <b>${password}</b>
+    </#if>
   </body>
 </html>

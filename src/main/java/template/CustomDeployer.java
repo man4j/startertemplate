@@ -6,11 +6,11 @@ public class CustomDeployer extends Deployer {
     @Override
     protected void configureContextParams() {
         super.configureContextParams();
-        
+
         deploymentInfo.addInitParameter("contextConfigLocation", "template.config.CustomDbConfig,"
-                                                               + "template.config.CustomMvcConfig,"
-                                                               + "template.config.CustomSecurityConfig,"
-                                                               + "template.config.CustomSocialConfig");
+                + "template.config.CustomMvcConfig,"
+                + "template.config.CustomSecurityConfig,"
+                + "template.config.CustomSocialConfig");
     }
 
     @Override

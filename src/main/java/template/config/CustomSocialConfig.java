@@ -3,6 +3,7 @@ package template.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
+import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 
 import starter.config.SocialConfig;
 
@@ -10,6 +11,6 @@ import starter.config.SocialConfig;
 public class CustomSocialConfig extends SocialConfig {
     @Override
     public void addConnectionFactories(ConnectionFactoryConfigurer conf, Environment env) {
-        //conf.addConnectionFactory(new FacebookConnectionFactory("id", "secret"));
+//        conf.addConnectionFactory(new FacebookConnectionFactory("632939380166022", ""));
     }
 }

@@ -1,10 +1,5 @@
 package support;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.script.ScriptException;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.testcontainers.containers.MySQLContainer;
@@ -18,7 +13,7 @@ public class RestTestSupport extends TestContainersSupport {
     private static MySQLContainer mysql;
     
     @BeforeClass
-    public static void before() throws SQLException, ScriptException, IOException {
+    public static void before() {
         mysql = createMySQLContainer();
         
         System.setProperty("spring.profiles.active", "integration");

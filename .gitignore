@@ -4,3 +4,5 @@
 /.project
 /.dbeaver-data-sources.xml
 /logs/
+/.idea/
+/starter-template.iml

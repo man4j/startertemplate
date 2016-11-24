@@ -2,24 +2,15 @@ package integration.selenium;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
+import integration.selenium.page.SignInPage;
 import support.SeleniumTestContainersSupport;
 
 public class SeleniumIntegrationTest extends SeleniumTestContainersSupport {
     @Test
     public void shouldWork() {
-        String signInUrl = getWebURL() + "/auth/signin";
+        SignInPage signInPage = new SignInPage(getDriver(), getWebURL());
         
-        WebDriver driver = getDriver();
-        
-        driver.get(signInUrl);
-        
-        WebElement e = driver.findElement(By.id("submitButton"));
-        
-        Assert.assertNotNull(e);
-        Assert.assertEquals("Войти", e.getText());
+        Assert.assertEquals("Войти", signInPage.getSubmitButton().getText());
     }
 }

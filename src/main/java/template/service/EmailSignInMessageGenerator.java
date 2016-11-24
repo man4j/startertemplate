@@ -22,12 +22,20 @@ public class EmailSignInMessageGenerator {
     private HttpServletRequest httpRequest;
     
     public SimpleMessage generate(AbstractProfile profile, String decryptedPassword) {
+        return generate(profile, decryptedPassword, null);
+    }
+    
+    public SimpleMessage generate(AbstractProfile profile, String decryptedPassword, String socialUserId) {
         Map<String, String> map = new HashMap<>();
 
         map.put("email", profile.getEmail());
         map.put("uuid", profile.getConfirmUuid());
         map.put("baseUrl", RequestUtil.getAppURL(httpRequest));
-        map.put("password", decryptedPassword);        
+        map.put("password", decryptedPassword);
+        
+        if (socialUserId != null) {
+            map.put("socialUserId", socialUserId);
+        }
         
         String body = generator.createMessageFromTemplate("/email/email_signin.ftlh", map);
         

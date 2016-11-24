@@ -19,8 +19,8 @@ public class CustomMvcConfig extends MvcConfig {
         
         javaMailSender.setHost("smtp.gmail.com");
         javaMailSender.setPort(587);
-//        javaMailSender.setUsername("name");
-//        javaMailSender.setPassword("password");
+        javaMailSender.setUsername("esftest777@gmail.com");
+//        javaMailSender.setPassword("");
         
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");

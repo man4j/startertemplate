@@ -25,18 +25,22 @@ public class EmailSigninController {
     private SecurityService securityService;
 
     @RequestMapping(method = RequestMethod.GET)
-    String signin(@RequestParam String uuid, HttpServletRequest request, HttpServletResponse response) {
+    String signin(@RequestParam String uuid, String socialUserId, HttpServletRequest request, HttpServletResponse response) {
         AbstractProfile profile = profileService.getByConfirmUuid(uuid);
 
         if (profile == null) {
             return "/auth/expired_link";
         }
-
+        
         profile.setConfirmUuid(UUID.randomUUID().toString());//Одну и ту же ссылку нельзя использовать дважды
 
         profile.setConfirmed(true); //если аккаунт не подтвержден
 
         profileService.update(profile);
+        
+        if (socialUserId != null) {
+            securityService.updateSocialConnection(socialUserId, profile.getEmail());
+        }
 
         securityService.auth(profile, request, response, true);
 

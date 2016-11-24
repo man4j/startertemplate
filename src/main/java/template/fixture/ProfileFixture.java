@@ -20,8 +20,8 @@ public class ProfileFixture {
     
     @PostConstruct
     public void init() {
-        if (myProfileService.getById("man4j@ya.ru") == null) {
-            myProfileService.create("man4j@ya.ru", "man4j@ya.ru", passwordEncoder.encode("123456"), true);
+        if (myProfileService.getByEmail("man4j@ya.ru") == null) {
+            myProfileService.create("man4j@ya.ru", passwordEncoder.encode("123456"), true);
         }
     }
 }

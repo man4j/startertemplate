@@ -1,9 +1,6 @@
 package support;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.script.ScriptException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -12,6 +9,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode;
 import org.testcontainers.containers.MySQLContainer;
+
+import com.jcraft.jsch.Session;
 
 import template.CustomDeployer;
 
@@ -26,26 +25,30 @@ public class SeleniumTestContainersSupport extends TestContainersSupport {
     
     private static CustomDeployer deployer;
     
+    private static Session sshSession;
+    
     private static final String DOCKER_HOST_IP = "172.17.0.1";
     
     @SuppressWarnings("rawtypes")
     @BeforeClass
-    public static void startContainer() throws SQLException, ScriptException, IOException, UnsupportedOperationException {
+    public static void startContainer() throws UnsupportedOperationException, IOException {
+        int port = 8080;
+        
+        if (System.getenv("DOCKER_HOST") != null) {        
+            Object[] result = createTunnel();
+            
+            sshSession = (Session) result[0];
+            port = (int) result[1];
+        }
+        
         browser = new BrowserWebDriverContainer().withDesiredCapabilities(DesiredCapabilities.firefox())
                                                  .withRecordingMode(VncRecordingMode.SKIP, null);
         browser.start();
         
-        String host;
-        
-        if (System.getenv("WEB_HOST") != null) {
-            host = System.getenv("WEB_HOST");
-        } else {
-            host = DOCKER_HOST_IP;
-        }
-        
-        WEB_URL = "http://" + host + ":8080/";
+        WEB_URL = "http://" + DOCKER_HOST_IP + ":" + port;
         
         System.out.println("Web Application URL: " + WEB_URL);
+        System.out.println("VNC URL: " + browser.getVncAddress());
         
         mysql = createMySQLContainer();
         
@@ -56,12 +59,20 @@ public class SeleniumTestContainersSupport extends TestContainersSupport {
     }
     
     @AfterClass
-    public static void stopContainer() {
+    public static void stopContainer() throws IOException {
+        browser.getWebDriver().quit();
         browser.stop();
+        
         deployer.undeploy();
+        
         mysql.stop();
+        mysql.getDockerClient().close();//Закрывает расшаренный докер-клиент для всех контейнеров
+        
+        if (sshSession != null) {
+            sshSession.disconnect();
+        }
     }
-    
+        
     public RemoteWebDriver getDriver() {
         return browser.getWebDriver();
     }

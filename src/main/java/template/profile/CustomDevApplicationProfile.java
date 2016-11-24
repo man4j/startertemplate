@@ -10,4 +10,14 @@ public class CustomDevApplicationProfile extends CustomApplicationProfile {
     public boolean isShowSql() {
         return true;
     }
+
+    @Override
+    public boolean isTemplateCacheEnabled() {
+        return false;
+    }
+
+    @Override
+    public int getMessagesCacheInterval() {
+        return 0;
+    }
 }

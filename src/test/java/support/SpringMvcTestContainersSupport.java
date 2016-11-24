@@ -1,10 +1,5 @@
 package support;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.script.ScriptException;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -49,7 +44,7 @@ public class SpringMvcTestContainersSupport extends TestContainersSupport {
     private MockMvc mockMvc;
     
     @BeforeClass
-    public static void startContainer() throws SQLException, ScriptException, IOException {
+    public static void startContainer() {
         mysql = createMySQLContainer();
     }
 

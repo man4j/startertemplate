@@ -2,6 +2,7 @@ package template.controller.auth;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,11 @@ public class SignInController {
     private PasswordEncoder passwordEncoder;
     
     @RequestMapping(method = RequestMethod.GET)
-    String get(@SuppressWarnings("unused") @ModelAttribute("form") SigninForm form) {       
+    String get(@SuppressWarnings("unused") @ModelAttribute("form") SigninForm form, HttpSession session) {        
+        if (session.getAttribute("notExistingUserId") != null) {
+            return "redirect:/auth/setEmail";
+        }
+        
         return "/auth/signin";
     }
 
@@ -38,7 +43,7 @@ public class SignInController {
     String signin(@ModelAttribute("form") @Valid SigninForm form, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         if (result.hasErrors()) return "/auth/signin";
 
-        AbstractProfile profile = profileService.getById(form.getEmail());
+        AbstractProfile profile = profileService.getByEmail(form.getEmail());
 
         if (profile == null || !passwordEncoder.matches(form.getPassword(), profile.getPassword())) {
             result.rejectValue("email", "signin.incorrectEmailOrPassword", "Неверный логин или пароль");

@@ -13,7 +13,7 @@
   </@ui.addScript>
   
   <#assign content in ui>
-    Index page
+    Index page. User login: ${userName}
     
     <hr />
     

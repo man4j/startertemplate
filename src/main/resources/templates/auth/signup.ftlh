@@ -26,11 +26,11 @@
   	        <label><@spring.messageText 'signup.confirmPassword' 'Подтвердите пароль'/></label>	    
   	        <@spring.formPasswordInput 'form.confirmPassword' 'class="${util.errClass("form.confirmPassword", "err form-control", "form-control")}" maxlength="18" autocomplete="off"'/>       
   	      
-	        <div class="height: 20px;">&nbsp;</div>        
+	          <div class="height: 20px;">&nbsp;</div>        
   	        <button type="submit" class="btn btn-lg btn-primary btn-block"><@spring.messageText 'button.save' 'Сохранить' /></button>
-  		    </div>
+      	  </form>
   		  </div>
-  	  </form>
+  	  </div>
   	</div>
   </#assign>
 

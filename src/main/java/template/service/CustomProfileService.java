@@ -1,12 +1,11 @@
 package template.service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import starter.annotation.WithTransaction;
 import starter.model.AbstractProfile;
 import starter.service.ProfileService;
 import template.dao.UserProfileDao;
@@ -17,39 +16,37 @@ public class CustomProfileService implements ProfileService {
     @Autowired
     private UserProfileDao userProfileDao;
     
-    @PersistenceContext
-    private EntityManager em;
-    
     @Override
-    @Transactional(readOnly = true)
+    @WithTransaction(readOnly = true)
     public UserProfile getByConfirmUuid(String uuid) {
         return userProfileDao.findByUuid(uuid);
     }
 
+    @SuppressWarnings("cast")
     @Override
-    @Transactional
+    @WithTransaction
     public UserProfile update(AbstractProfile profile) {
-        return (UserProfile) em.merge(profile);
+        return (UserProfile) userProfileDao.update((UserProfile) profile);
     }
 
     @Override
-    @Transactional
-    public UserProfile create(String id, String email, String password, boolean confirmed) {
+    @WithTransaction
+    public UserProfile create(String email, String password, boolean confirmed) {
         UserProfile up = new UserProfile();
         
-        up.setId(id);
         up.setEmail(email);
         up.setPassword(password);
         up.setConfirmed(confirmed);
+        up.setConfirmUuid(UUID.randomUUID().toString());
         
-        em.persist(up);
+        userProfileDao.insert(up);
 
         return up;
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public UserProfile getById(String id) {
-        return em.find(UserProfile.class, id);
+    @WithTransaction(readOnly = true)
+    public UserProfile getByEmail(String email) {
+        return userProfileDao.findByEmail(email);
     }
 }

@@ -36,7 +36,7 @@ public class RestorePasswordController {
     private SecurityService securityService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public void get(@SuppressWarnings("unused") @ModelAttribute("form") RestorePasswordForm form) {
+    void get(@SuppressWarnings("unused") @ModelAttribute("form") RestorePasswordForm form) {
         // empty
     }
 
@@ -44,7 +44,7 @@ public class RestorePasswordController {
     String restore(@ModelAttribute("form") @Valid RestorePasswordForm form, BindingResult result) {
         if (result.hasErrors()) return "/auth/restore";
 
-        AbstractProfile profile = profileService.getById(form.getEmail());
+        AbstractProfile profile = profileService.getByEmail(form.getEmail());
         
         if (profile == null) {
             result.rejectValue("email", "email.notExists", "Данный E-mail не зарегистрирован");
