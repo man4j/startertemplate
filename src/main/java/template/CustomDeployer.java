@@ -1,5 +1,8 @@
 package template;
 
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
+
+import io.undertow.servlet.Servlets;
 import starter.deployer.Deployer;
 
 public class CustomDeployer extends Deployer {
@@ -26,6 +29,11 @@ public class CustomDeployer extends Deployer {
     @Override
     protected void configureServlets() {
         super.configureServlets();
+        
+        deploymentInfo.addServlet(Servlets.servlet("ws", MessageDispatcherServlet.class)
+                      .addInitParam("transformWsdlLocations", "true")
+                      .addMapping("/ws/*")
+                      .setLoadOnStartup(2));
     }
 
     @Override
