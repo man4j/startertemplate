@@ -1,11 +1,17 @@
 package template;
 
-import org.springframework.ws.transport.http.MessageDispatcherServlet;
+import java.util.Collections;
+import java.util.Set;
 
-import io.undertow.servlet.Servlets;
 import starter.deployer.Deployer;
+import template.config.WsServletInitializer;
 
 public class CustomDeployer extends Deployer {
+    @Override
+    protected Set<Class<?>> configureSpringInitializers() {
+        return Collections.singleton(WsServletInitializer.class);
+    }
+    
     @Override
     protected void configureContextParams() {
         super.configureContextParams();
@@ -15,7 +21,7 @@ public class CustomDeployer extends Deployer {
                 + "template.config.CustomSecurityConfig,"
                 + "template.config.CustomSocialConfig");
     }
-
+    
     @Override
     protected void configureFilters() {
         super.configureFilters();
@@ -28,12 +34,7 @@ public class CustomDeployer extends Deployer {
 
     @Override
     protected void configureServlets() {
-        super.configureServlets();
-        
-        deploymentInfo.addServlet(Servlets.servlet("ws", MessageDispatcherServlet.class)
-                      .addInitParam("transformWsdlLocations", "true")
-                      .addMapping("/ws/*")
-                      .setLoadOnStartup(2));
+        super.configureServlets();        
     }
 
     @Override
