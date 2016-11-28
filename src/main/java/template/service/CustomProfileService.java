@@ -26,7 +26,7 @@ public class CustomProfileService implements ProfileService {
     @Override
     @WithTransaction
     public UserProfile update(AbstractProfile profile) {
-        return (UserProfile) userProfileDao.update((UserProfile) profile);
+        return (UserProfile) userProfileDao.saveOrUpdate((UserProfile) profile);
     }
 
     @Override
