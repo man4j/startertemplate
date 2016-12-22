@@ -1,5 +1,7 @@
 package support;
 
+import java.io.IOException;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,8 +35,8 @@ import template.config.CustomSocialConfig;
 @WebAppConfiguration
 @ContextConfiguration(classes = {CustomDbConfig.class, CustomMvcConfig.class, CustomSecurityConfig.class, CustomSocialConfig.class})
 @ActiveProfiles("integration")
-@DirtiesContext(hierarchyMode = HierarchyMode.CURRENT_LEVEL)
-public class SpringMvcTestContainersSupport extends TestContainersSupport {
+@DirtiesContext
+public class SpringMvcTestContainersSupport {
     @Autowired
     private WebApplicationContext wac;
 
@@ -45,12 +47,13 @@ public class SpringMvcTestContainersSupport extends TestContainersSupport {
     
     @BeforeClass
     public static void startContainer() {
-        mysql = createMySQLContainer();
+        mysql = TestContainersSupport.createMySQLContainer();
     }
 
     @AfterClass
-    public static void stopContainer() {
+    public static void stopContainer() throws IOException {
         mysql.stop();
+        TestContainersSupport.closeDockerClient(mysql);
     }
     
     @Before

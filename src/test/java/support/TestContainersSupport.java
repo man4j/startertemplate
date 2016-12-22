@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import org.flywaydb.core.Flyway;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 
 import com.jcraft.jsch.JSch;
@@ -37,12 +38,14 @@ public class TestContainersSupport {
         };
         
         mysql.start();
-        
-//        importDump(mysql);
         migrate(mysql);
         setSystemVars(mysql);
         
         return mysql;
+    }
+    
+    public static void closeDockerClient(GenericContainer<?> container) throws IOException {
+//        container.getDockerClient().close();
     }
     
     public static Object[] createTunnel() throws IOException {
@@ -76,13 +79,6 @@ public class TestContainersSupport {
             throw new IOException(e);
         }
     }
-
-//    @SuppressWarnings("rawtypes")
-//    private static void importDump(MySQLContainer mysql) throws ScriptException, IOException, SQLException {
-//        try (java.sql.Connection conn = mysql.createConnection("")) {
-//            org.testcontainers.jdbc.ext.ScriptUtils.executeSqlScript(conn, "", IOUtils.toString(SpringMvcTestContainersSupport.class.getResourceAsStream("/dump.sql")));
-//        }
-//    }
 
     @SuppressWarnings("rawtypes")
     private static void setSystemVars(MySQLContainer mysql) {

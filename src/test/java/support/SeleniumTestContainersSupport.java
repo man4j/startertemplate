@@ -14,7 +14,7 @@ import com.jcraft.jsch.Session;
 
 import template.CustomDeployer;
 
-public class SeleniumTestContainersSupport extends TestContainersSupport {
+public class SeleniumTestContainersSupport {
     @SuppressWarnings("rawtypes")
     private static BrowserWebDriverContainer browser;
     
@@ -35,7 +35,7 @@ public class SeleniumTestContainersSupport extends TestContainersSupport {
         int port = 8080;
         
         if (System.getenv("DOCKER_HOST") != null) {        
-            Object[] result = createTunnel();
+            Object[] result = TestContainersSupport.createTunnel();
             
             sshSession = (Session) result[0];
             port = (int) result[1];
@@ -50,7 +50,7 @@ public class SeleniumTestContainersSupport extends TestContainersSupport {
         System.out.println("Web Application URL: " + WEB_URL);
         System.out.println("VNC URL: " + browser.getVncAddress());
         
-        mysql = createMySQLContainer();
+        mysql = TestContainersSupport.createMySQLContainer();
         
         System.setProperty("spring.profiles.active", "integration");
         
@@ -66,7 +66,8 @@ public class SeleniumTestContainersSupport extends TestContainersSupport {
         deployer.undeploy();
         
         mysql.stop();
-        mysql.getDockerClient().close();//Закрывает расшаренный докер-клиент для всех контейнеров
+        
+        TestContainersSupport.closeDockerClient(mysql);
         
         if (sshSession != null) {
             sshSession.disconnect();

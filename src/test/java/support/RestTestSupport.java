@@ -1,12 +1,14 @@
 package support;
 
+import java.io.IOException;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.testcontainers.containers.MySQLContainer;
 
 import template.CustomDeployer;
 
-public class RestTestSupport extends TestContainersSupport {
+public class RestTestSupport {
     private static CustomDeployer deployer;
     
     @SuppressWarnings("rawtypes")
@@ -14,7 +16,7 @@ public class RestTestSupport extends TestContainersSupport {
     
     @BeforeClass
     public static void before() {
-        mysql = createMySQLContainer();
+        mysql = TestContainersSupport.createMySQLContainer();
         
         System.setProperty("spring.profiles.active", "integration");
         
@@ -23,9 +25,10 @@ public class RestTestSupport extends TestContainersSupport {
     }
     
     @AfterClass
-    public static void stopContainer() {
+    public static void stopContainer() throws IOException {
         deployer.undeploy();
         mysql.stop();
+        TestContainersSupport.closeDockerClient(mysql);
     }
     
     public static String getWebURL() {
