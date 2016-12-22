@@ -3,8 +3,6 @@ package template.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
-import org.springframework.social.facebook.connect.FacebookConnectionFactory;
-
 import starter.config.SocialConfig;
 
 @Configuration//need for correct proxy configuration class

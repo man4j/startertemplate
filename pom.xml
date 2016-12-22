@@ -22,7 +22,7 @@
     <dependency>
       <groupId>starter</groupId>
       <artifactId>starter</artifactId>
-      <version>0.50</version>
+      <version>0.51</version>
     </dependency>
     
     <dependency>
@@ -288,7 +288,7 @@
           </execution>
         </executions>
       </plugin>
-      
+<!--       
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
@@ -306,7 +306,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>

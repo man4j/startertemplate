@@ -8,25 +8,22 @@ import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.springframework.xml.xsd.XsdSchema;
 
 @EnableWs
 @Configuration
 @ComponentScan(basePackages = {"template.ws"})
 public class WsConfig extends WsConfigurerAdapter {
     @Bean(name = "countries")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema countriesSchema) {
+    public DefaultWsdl11Definition countriesByNameWsdl11Definition() throws Exception {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+        
+        SimpleXsdSchema schema = new SimpleXsdSchema(new ClassPathResource("countries.xsd"));
+        schema.afterPropertiesSet();
         
         wsdl11Definition.setPortTypeName("CountriesPort");
         wsdl11Definition.setLocationUri("/ws");
-        wsdl11Definition.setSchema(countriesSchema);
+        wsdl11Definition.setSchema(schema);
         
         return wsdl11Definition;
-    }
-
-    @Bean
-    public XsdSchema countriesSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("countries.xsd"));
     }
 }
