@@ -59,15 +59,13 @@ public class SeleniumTestContainersSupport {
     }
     
     @AfterClass
-    public static void stopContainer() throws IOException {
+    public static void stopContainer() {
         browser.getWebDriver().quit();
         browser.stop();
         
         deployer.undeploy();
         
         mysql.stop();
-        
-        TestContainersSupport.closeDockerClient(mysql);
         
         if (sshSession != null) {
             sshSession.disconnect();

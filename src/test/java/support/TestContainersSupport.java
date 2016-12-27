@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import org.flywaydb.core.Flyway;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 
 import com.jcraft.jsch.JSch;
@@ -42,10 +41,6 @@ public class TestContainersSupport {
         setSystemVars(mysql);
         
         return mysql;
-    }
-    
-    public static void closeDockerClient(GenericContainer<?> container) throws IOException {
-//        container.getDockerClient().close();
     }
     
     public static Object[] createTunnel() throws IOException {

@@ -1,7 +1,5 @@
 package support;
 
-import java.io.IOException;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.testcontainers.containers.MySQLContainer;
@@ -25,10 +23,9 @@ public class RestTestSupport {
     }
     
     @AfterClass
-    public static void stopContainer() throws IOException {
+    public static void stopContainer() {
         deployer.undeploy();
         mysql.stop();
-        TestContainersSupport.closeDockerClient(mysql);
     }
     
     public static String getWebURL() {

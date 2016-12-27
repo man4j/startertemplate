@@ -1,7 +1,5 @@
 package support;
 
-import java.io.IOException;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -9,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.HierarchyMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -51,9 +48,8 @@ public class SpringMvcTestContainersSupport {
     }
 
     @AfterClass
-    public static void stopContainer() throws IOException {
+    public static void stopContainer() {
         mysql.stop();
-        TestContainersSupport.closeDockerClient(mysql);
     }
     
     @Before
