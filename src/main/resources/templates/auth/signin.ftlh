@@ -1,8 +1,3 @@
-<#import "/spring.ftl" as spring/>
-<#import "/lib/composition.ftlh" as ui />
-<#import "/lib/util.ftlh" as util />
-<#import "/component/error_block.ftlh" as errorBlock />
-
 <@ui.composition "/base.ftlh">  
   <#assign title in ui>
     Signin  
@@ -40,7 +35,7 @@
           <input type="hidden" name="scope" value="public_profile,email,user_friends" />
           
           <a class="connectButton" href="#">
-            <img style="width:25px; padding-right:8px;" class="" src="<@util.r '/img/facebook_flat.png' />" alt="Facebook" />
+            <img style="width:25px; padding-right:8px;" class="" src="<@u.r '/img/facebook_flat.png' />" alt="Facebook" />
           </a>
         </form>
         

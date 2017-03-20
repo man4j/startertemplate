@@ -5,17 +5,17 @@
 
   <xs:element name="getCountryRequest">
     <xs:complexType>
-      <xs:sequence>
+      <xs:all>
         <xs:element name="name" type="xs:string" />
-      </xs:sequence>
+      </xs:all>
     </xs:complexType>
   </xs:element>
 
   <xs:element name="getCountryResponse">
     <xs:complexType>
-      <xs:sequence>
+      <xs:all>
         <xs:element name="country" type="tns:country" />
-      </xs:sequence>
+      </xs:all>
     </xs:complexType>
   </xs:element>
 

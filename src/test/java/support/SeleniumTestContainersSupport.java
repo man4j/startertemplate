@@ -34,7 +34,7 @@ public class SeleniumTestContainersSupport {
     public static void startContainer() throws UnsupportedOperationException, IOException {
         int port = 8080;
         
-        if (System.getenv("DOCKER_HOST") != null) {        
+        if (System.getenv("DOCKER_HOST") != null) {
             Object[] result = TestContainersSupport.createTunnel();
             
             sshSession = (Session) result[0];
